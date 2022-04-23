@@ -7,7 +7,7 @@
       check_mode: false
       changed_when: false
       register: jc_which
-      failed_when: jc_which.rc is not regex('^0|1$)
+      failed_when: jc_which.rc is not regex('^0|1$')
 
     - name: Check the installed jc version
       block:
