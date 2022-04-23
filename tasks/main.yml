@@ -48,7 +48,7 @@
 
         - name: Debug the proposed version
           debug:
-            var: jc_proposed
+            msg:
             verbosity: 2
 
       when: jc_version == "latest"
@@ -57,6 +57,20 @@
       set_fact:
         jc_proposed: "{{ jc_version | string }}"
       when: jc_version != "latest"
+
+    - name: Debug the proposed version and variable type
+      debug:
+        msg:
+          - "variable value {{ jc_proposed }}"
+          - "variable type {{ jc_proposed | type_debug }}"
+        verbosity: 2
+
+    - name: Debug the existing version and variable type
+      debug:
+        msg:
+          - "variable value {{ jc_existing.version }}"
+          - "variable type {{ jc_existing.version | type_debug }}"
+        verbosity: 2
 
     - name: Download and install a new version of jc
       block:
@@ -73,7 +87,7 @@
 
       when: >
         ( jc_which.rc == 1 ) or
-        ( ( jc_version == "latest" ) and ( jc_existing.version | string is version(jc_version, '<') ) ) or
+        ( ( jc_version == "latest" ) and ( jc_existing.version | string is version(jc_proposed, '<') ) ) or
         ( ( jc_version != "latest" ) and ( jc_existing.version | string is not version(jc_version, '=') ) )
 
   when: jc
