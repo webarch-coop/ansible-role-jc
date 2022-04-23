@@ -73,8 +73,8 @@
 
       when: >
         ( jc_which.rc == 1 ) or
-        ( ( jc_version == "latest" ) and ( jc_existing.version | str is version(jc_version, '<') ) ) or
-        ( ( jc_version != "latest" ) and ( jc_existing.version | str is not version(jc_version, '=') ) )
+        ( ( jc_version == "latest" ) and ( jc_existing.version | string is version(jc_version, '<') ) ) or
+        ( ( jc_version != "latest" ) and ( jc_existing.version | string is not version(jc_version, '=') ) )
 
   when: jc
   tags:
