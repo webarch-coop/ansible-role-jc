@@ -46,11 +46,6 @@
           set_fact:
             jc_proposed: "{{ jc_latest_headers.location | urlsplit('path') | basename | regex_replace('^v') | string }}"
 
-        - name: Debug the proposed version
-          debug:
-            msg:
-            verbosity: 2
-
       when: jc_version == "latest"
 
     - name: Set a fact for the proposed version of jc when not the latest
@@ -84,6 +79,7 @@
           apt:
             deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
             state: present
+            allow_downgrade: true
 
       when: >
         ( jc_which.rc == 1 ) or
