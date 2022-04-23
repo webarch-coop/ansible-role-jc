@@ -44,7 +44,7 @@
 
         - name: Set a fact for the latest version of jc
           set_fact:
-            jc_proposed: "{{ jc_latest_headers.location | urlsplit('path') | basename | regex_replace('^v') }}"
+            jc_proposed: "{{ jc_latest_headers.location | urlsplit('path') | basename | regex_replace('^v') | string }}"
 
         - name: Debug the proposed version
           debug:
@@ -55,7 +55,7 @@
 
     - name: Set a fact for the proposed version of jc when not the latest
       set_fact:
-        jc_proposed: "{{ jc_version }}"
+        jc_proposed: "{{ jc_version | string }}"
       when: jc_version != "latest"
 
     - name: Download and install a new version of jc
