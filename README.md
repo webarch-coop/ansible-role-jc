@@ -2,7 +2,7 @@
 
 [![pipeline status](https://git.coop/webarch/jc/badges/main/pipeline.svg)](https://git.coop/webarch/jc/-/commits/main)
 
-Ansible role to install `jc` on Debian and Ubuntu using [deb packages](https://github.com/kellyjonbrazil/jc/releases) from [the GitHub repo](https://github.com/kellyjonbrazil/jc), there are two [default variable](defaults/main.yml):
+Ansible role to install `jc` on Debian and Ubuntu using [deb packages](https://github.com/kellyjonbrazil/jc/releases) from [the GitHub repo](https://github.com/kellyjonbrazil/jc), there are two [default variables](defaults/main.yml):
 
 | Variable name        | Default value    | Comment                                                                                                                                   |
 |----------------------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
