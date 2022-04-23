@@ -29,8 +29,8 @@
         - name: Debug the existing version and variable type
           debug:
             msg:
-              - "variable value {{ jc_existing.version }}"
-              - "variable type {{ jc_existing.version | type_debug }}"
+              - "variable value {{ jc_existing }}"
+              - "variable type {{ jc_existing | type_debug }}"
             verbosity: 2
 
       when: jc_which.rc == 0
