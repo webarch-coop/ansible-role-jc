@@ -79,7 +79,7 @@
           apt:
             deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
             state: present
-            allow_downgrade: true
+            force: true
 
       when: >
         ( jc_which.rc == 1 ) or
