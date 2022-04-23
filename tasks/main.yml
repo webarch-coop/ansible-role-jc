@@ -33,8 +33,6 @@
               - "variable type {{ jc_existing.version | type_debug }}"
             verbosity: 2
 
-      when: jc_existing.version is defined
-
       when: jc_which.rc == 0
 
     - name: Find the latest version of jc
