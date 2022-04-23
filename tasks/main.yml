@@ -14,6 +14,8 @@
 
         - name: Check the jc version
           command: jc -a
+          check_mode: false
+          changed_when: false
           register: jc_a
 
         - name: Set a fact for the existing version
@@ -71,8 +73,8 @@
 
       when: >
         ( jc_which.rc == 1 ) or
-        ( ( jc_version == "latest" ) and ( jc_existing.version is version(jc_version, '<') ) ) or
-        ( ( jc_version != "latest" ) and ( jc_existing.version is not version(jc_version, '=') ) )
+        ( ( jc_version == "latest" ) and ( jc_existing.version | str is version(jc_version, '<') ) ) or
+        ( ( jc_version != "latest" ) and ( jc_existing.version | str is not version(jc_version, '=') ) )
 
   when: jc
   tags:
