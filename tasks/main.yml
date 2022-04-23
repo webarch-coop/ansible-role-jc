@@ -1,0 +1,32 @@
+---
+- name: Install or upgrade jc
+  block:
+
+    - name: Which jc
+      ansible.builtin.command: which jc
+      check_mode: false
+      changed_when: false
+      register: jc_which
+      failed_when: jc_which.rc not regex('^0|1$)
+
+    - name: Check the installed jc version
+      block:
+
+        - name: Check the jc version
+          command: jc -a
+          register: jc_a
+
+        - name: Set a fact for the existing version
+          set_fact:
+            jc_existing: "{{ jc_a.stdout | from_json }}"
+
+        - name: Debug the existing version
+          debug:
+            var: jc_existing.version
+
+      when: jc_which.rc == 0
+
+  when: jc
+  tags:
+    - jc
+...
