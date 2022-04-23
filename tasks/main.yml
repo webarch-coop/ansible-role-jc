@@ -18,14 +18,22 @@
           changed_when: false
           register: jc_a
 
-        - name: Set a fact for the existing version
+        - name: Set a fact for the existing version information
           set_fact:
-            jc_existing: "{{ jc_a.stdout | from_json }}"
+            jc_existing_json: "{{ jc_a.stdout | from_json }}"
 
-        - name: Debug the existing version
+        - name: Set a fact for the existing version information
+          set_fact:
+            jc_existing: "{{ jc_existing_json.version | string }}"
+
+        - name: Debug the existing version and variable type
           debug:
-            var: jc_existing.version
+            msg:
+              - "variable value {{ jc_existing.version }}"
+              - "variable type {{ jc_existing.version | type_debug }}"
             verbosity: 2
+
+      when: jc_existing.version is defined
 
       when: jc_which.rc == 0
 
@@ -60,13 +68,6 @@
           - "variable type {{ jc_proposed | type_debug }}"
         verbosity: 2
 
-    - name: Debug the existing version and variable type
-      debug:
-        msg:
-          - "variable value {{ jc_existing.version }}"
-          - "variable type {{ jc_existing.version | type_debug }}"
-        verbosity: 2
-
     - name: Download and install a new version of jc
       block:
 
@@ -83,8 +84,8 @@
 
       when: >
         ( jc_which.rc == 1 ) or
-        ( ( jc_version == "latest" ) and ( jc_existing.version | string is version(jc_proposed, '<') ) ) or
-        ( ( jc_version != "latest" ) and ( jc_existing.version | string is not version(jc_version, '=') ) )
+        ( ( jc_version == "latest" ) and ( jc_existing is version(jc_proposed, '<') ) ) or
+        ( ( jc_version != "latest" ) and ( jc_existing is not version(jc_version, '=') ) )
 
   when: jc
   tags:
