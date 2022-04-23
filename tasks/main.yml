@@ -13,21 +13,21 @@
       block:
 
         - name: Check the jc version
-          command: jc -a
+          ansible.builtin.command: jc -a
           check_mode: false
           changed_when: false
           register: jc_a
 
         - name: Set a fact for the existing version information
-          set_fact:
+          ansible.builtin.set_fact:
             jc_existing_json: "{{ jc_a.stdout | from_json }}"
 
         - name: Set a fact for the existing version information
-          set_fact:
+          ansible.builtin.set_fact:
             jc_existing: "{{ jc_existing_json.version | string }}"
 
         - name: Debug the existing version and variable type
-          debug:
+          ansible.builtin.debug:
             msg:
               - "variable value {{ jc_existing }}"
               - "variable type {{ jc_existing | type_debug }}"
@@ -39,7 +39,7 @@
       block:
 
         - name: Use a HEAD request to get the latest redirect URL
-          uri:
+          ansible.builtin.uri:
             url: https://github.com/kellyjonbrazil/jc/releases/latest
             method: HEAD
             status_code: 302
@@ -49,18 +49,18 @@
           register: jc_latest_headers
 
         - name: Set a fact for the latest version of jc
-          set_fact:
+          ansible.builtin.set_fact:
             jc_proposed: "{{ jc_latest_headers.location | urlsplit('path') | basename | regex_replace('^v') | string }}"
 
       when: jc_version == "latest"
 
     - name: Set a fact for the proposed version of jc when not the latest
-      set_fact:
+      ansible.builtin.set_fact:
         jc_proposed: "{{ jc_version | string }}"
       when: jc_version != "latest"
 
     - name: Debug the proposed version and variable type
-      debug:
+      ansible.builtin.debug:
         msg:
           - "variable value {{ jc_proposed }}"
           - "variable type {{ jc_proposed | type_debug }}"
@@ -70,7 +70,7 @@
       block:
 
         - name: Download jc deb
-          get_url:
+          ansible.builtin.get_url:
             url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_amd64.deb"
             dest: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
             mode: 0600
@@ -78,7 +78,7 @@
             group: root
 
         - name: Install jc
-          apt:
+          ansible.builtin.apt:
             deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
             state: present
             force: true
