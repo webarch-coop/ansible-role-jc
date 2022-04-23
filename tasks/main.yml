@@ -73,6 +73,9 @@
           get_url:
             url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_amd64.deb"
             dest: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
+            mode: 0600
+            owner: root
+            group: root
 
         - name: Install jc
           apt:
