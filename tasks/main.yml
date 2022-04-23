@@ -23,6 +23,7 @@
         - name: Debug the existing version
           debug:
             var: jc_existing.version
+            verbosity: 2
 
       when: jc_which.rc == 0
 
@@ -39,12 +40,39 @@
           changed_when: false
           register: jc_latest_headers
 
-        - name: Set a fact for the latest version of Apache mod_md
+        - name: Set a fact for the latest version of jc
           set_fact:
-            jc_latest: "{{ jc_latest_headers.location | urlsplit('path') | basename }}"
+            jc_proposed: "{{ jc_latest_headers.location | urlsplit('path') | basename | regex_replace('^v'i') }}"
+
+        - name: Debug the proposed version
+          debug:
+            var: jc_proposed
+            verbosity: 2
 
       when: jc_version == "latest"
 
+    - name: Set a fact for the proposed version of jc when not the latest
+      set_fact:
+        jc_proposed: "{{ jc_version }}"
+      when: jc_version != "latest"
+
+    - name: Download and install a new version of jc
+      block:
+
+        - name: Download jc deb
+          get_url:
+            url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_amd64.deb"
+            dest: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
+
+        - name: Install jc
+          apt:
+            deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
+            state: present
+
+      when: >
+        ( jc_which.rc == 1 ) or
+        ( ( jc_version == "latest" ) and ( jc_existing.version is version(jc_version, '<') ) ) or
+        ( ( jc_version != "latest" ) and ( jc_existing.version is not version(jc_version, '=') ) )
 
   when: jc
   tags:
