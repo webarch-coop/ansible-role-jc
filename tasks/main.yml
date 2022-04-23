@@ -7,7 +7,7 @@
       check_mode: false
       changed_when: false
       register: jc_which
-      failed_when: jc_which.rc not regex('^0|1$)
+      failed_when: jc_which.rc is not regex('^0|1$)
 
     - name: Check the installed jc version
       block:
@@ -25,6 +25,26 @@
             var: jc_existing.version
 
       when: jc_which.rc == 0
+
+    - name: Find the latest version of jc
+      block:
+
+        - name: Use a HEAD request to get the latest redirect URL
+          uri:
+            url: https://github.com/kellyjonbrazil/jc/releases/latest
+            method: HEAD
+            status_code: 302
+            follow_redirects: none
+          check_mode: false
+          changed_when: false
+          register: jc_latest_headers
+
+        - name: Set a fact for the latest version of Apache mod_md
+          set_fact:
+            jc_latest: "{{ jc_latest_headers.location | urlsplit('path') | basename }}"
+
+      when: jc_version == "latest"
+
 
   when: jc
   tags:
