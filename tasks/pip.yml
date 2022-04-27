@@ -2,23 +2,17 @@
 - name: Install or upgrade jc using pip
   block:
 
-    - name: Uninstall pip3 version if present
-      ansible.builtin.pip:
-        name: jc
+    - name: Uninstall jc deb if present
+      ansible.builtin.apt:
+        pkg:
+          - jc
         state: absent
-        executable: /usr/bin/pip3
 
     - name: Install jc branch using pip3
       ansible.builtin.pip:
         name: "jc=={{ jc_proposed }}"
         state: forcereinstall
         executable: /usr/bin/pip3
-
-    - name: Uninstall jc deb if present
-      ansible.builtin.apt:
-        pkg:
-          - jc
-        state: absent
 
   tags:
     - jc

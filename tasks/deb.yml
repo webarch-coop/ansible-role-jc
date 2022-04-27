@@ -2,6 +2,12 @@
 - name: Install or upgrade jc using a deb
   block:
 
+    - name: Uninstall pip3 version if present
+      ansible.builtin.pip:
+        name: jc
+        state: absent
+        executable: /usr/bin/pip3
+
     - name: Download jc deb
       ansible.builtin.get_url:
         url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_amd64.deb"
@@ -10,23 +16,11 @@
         owner: root
         group: root
 
-    - name: Uninstall jc deb if present
-      ansible.builtin.apt:
-        pkg:
-          - jc
-        state: absent
-
     - name: Install jc deb
       ansible.builtin.apt:
         deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
         state: present
         force: true
-
-    - name: Uninstall pip3 version if present
-      ansible.builtin.pip:
-        name: jc
-        state: absent
-        executable: /usr/bin/pip3
 
   tags:
     - jc
