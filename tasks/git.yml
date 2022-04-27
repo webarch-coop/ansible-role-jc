@@ -9,9 +9,19 @@
         state: absent
       when: ( jc_deb is defined ) and ( jc_deb )
 
+    - name: jc git repo present
+      ansible.builtin.git:
+        repo: https://github.com/kellyjonbrazil/jc.git
+        dest: /usr/local/src/jc
+        version: "{{ jc_version }}"
+        clone: true
+        bare: true
+        force: true
+        update: true
+
     - name: Install jc branch using git
       ansible.builtin.pip:
-        name: "git+https://github.com/kellyjonbrazil/jc.git@{{ jc_version }}"
+        name: file:///usr/local/src/jc
         state: forcereinstall
         executable: /usr/bin/pip3
       when: jc_version is regex('^dev|latest|master$')
