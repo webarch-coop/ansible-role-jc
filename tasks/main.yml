@@ -62,36 +62,28 @@
           - "variable type {{ jc_proposed | type_debug }}"
         verbosity: 2
 
-    - name: Download and install a new version of jc
-      block:
+    - name: Debug install task to be run
+      debug:
+        msg: "jc is to be installed using {{ jc_install }} version {{ jc_proposed }}"
+        verbosity: 2
 
-        - name: Debug install task to be run
-          debug:
-            msg: "jc is to be installed using {{ jc_install }} version {{ jc_proposed }}"
-            verbosity: 2
+    - name: Include deb install tasks
+      ansible.builtin.include_tasks: deb.yml
+      when:
+        - jc_install == "deb"
+        - jc_version is not regex('^dev|latest|master$')
 
-        - name: Include deb install tasks
-          ansible.builtin.include_tasks: deb.yml
-          when:
-            - jc_install == "deb"
-            - jc_version is not regex('^dev|latest|master$')
+    - name: Include git install tasks
+      ansible.builtin.include_tasks: git.yml
+      when:
+        - jc_install == "git"
+        - jc_version is regex('^dev|latest|master$')
 
-        - name: Include git install tasks
-          ansible.builtin.include_tasks: git.yml
-          when:
-            - jc_install == "git"
-            - jc_version is regex('^dev|latest|master$')
-
-        - name: Include pip install tasks
-          ansible.builtin.include_tasks: pip.yml
-          when:
-            - jc_install == "pip"
-            - jc_version is not regex('^dev|latest|master$')
-
-      when: >
-        ( jc_which.rc == 1 ) or
-        ( ( jc_version == "latest" ) and ( jc_existing is version(jc_proposed, '<') ) ) or
-        ( ( jc_version != "latest" ) and ( jc_existing is not version(jc_version, '=') ) )
+    - name: Include pip install tasks
+      ansible.builtin.include_tasks: pip.yml
+      when:
+        - jc_install == "pip"
+        - jc_version is not regex('^dev|latest|master$')
 
     - name: Check the installed jc version
       include_tasks: version.yml
