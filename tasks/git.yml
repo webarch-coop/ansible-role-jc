@@ -21,9 +21,9 @@
     - name: Install jc branch using git
       ansible.builtin.pip:
         name: file:///usr/local/src/jc
+        requirements: /usr/local/src/jc/requirements.txt
         state: forcereinstall
         executable: /usr/bin/pip3
-      delegate_to: "{{ inventory_hostname }}"
 
   tags:
     - jc
