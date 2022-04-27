@@ -21,6 +21,8 @@
         deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
         state: present
         force: true
+        autoclean: true
+        autoremove: true
 
   tags:
     - jc
