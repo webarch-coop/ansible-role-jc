@@ -18,13 +18,13 @@
         force: true
         update: true
 
-    - name: Install jc requirements using git
+    - name: Install jc requirements using pip3 from git repo
       ansible.builtin.pip:
         requirements: /usr/local/src/jc/requirements.txt
         state: forcereinstall
         executable: /usr/bin/pip3
 
-    - name: Install jc using git
+    - name: Install jc using pip3 from git repo
       ansible.builtin.pip:
         name: file:///usr/local/src/jc
         state: forcereinstall
