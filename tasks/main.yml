@@ -75,7 +75,7 @@
     - name: Set a fact for the proposed version of jc for deb and pip installs
       ansible.builtin.set_fact:
         jc_proposed: "{{ jc_version | string }}"
-      when: jc_proposed != "latest"
+      when: ( jc_proposed is not defined ) or ( jc_proposed != "latest" )
 
     - name: Debug the proposed version and variable type
       ansible.builtin.debug:
