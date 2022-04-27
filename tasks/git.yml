@@ -2,11 +2,11 @@
 - name: Install or upgrade jc using pip
   block:
 
-    - name: Uninstall jc deb if present
-      ansible.builtin.apt:
-        pkg:
-          - jc
+    - name: Uninstall pip3 version if present
+      ansible.builtin.pip:
+        name: jc
         state: absent
+        executable: /usr/bin/pip3
 
     - name: Install jc branch using git
       ansible.builtin.pip:
@@ -15,12 +15,11 @@
         executable: /usr/bin/pip3
       when: jc_version is regex('^dev|latest|master$')
 
-    - name: Install jc version using git
-      ansible.builtin.pip:
-        name: "git+https://github.com/kellyjonbrazil/jc.git@v{{ jc_version }}"
-        state: forcereinstall
-        executable: /usr/bin/pip3
-      when: jc_version is not regex('^dev|latest|master$')
+    - name: Uninstall jc deb if present
+      ansible.builtin.apt:
+        pkg:
+          - jc
+        state: absent
 
   tags:
     - jc
