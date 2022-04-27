@@ -1,5 +1,5 @@
 ---
 jc: true
-jc_install: git
-jc_version: master
+jc_install: deb
+jc_version: latest
 ...

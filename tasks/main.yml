@@ -28,29 +28,7 @@
       failed_when: jc_which.rc is not regex('^0|1$')
 
     - name: Check the installed jc version
-      block:
-
-        - name: Check the jc version
-          ansible.builtin.command: jc -a
-          check_mode: false
-          changed_when: false
-          register: jc_a
-
-        - name: Set a fact for the existing version information
-          ansible.builtin.set_fact:
-            jc_existing_json: "{{ jc_a.stdout | from_json }}"
-
-        - name: Set a fact for the existing version information
-          ansible.builtin.set_fact:
-            jc_existing: "{{ jc_existing_json.version | string }}"
-
-        - name: Debug the existing version and variable type
-          ansible.builtin.debug:
-            msg:
-              - "variable value {{ jc_existing }}"
-              - "variable type {{ jc_existing | type_debug }}"
-            verbosity: 2
-
+      include_tasks: version.yml
       when: jc_which.rc == 0
 
     - name: Find the latest version of jc
@@ -109,6 +87,13 @@
         ( jc_which.rc == 1 ) or
         ( ( jc_version == "latest" ) and ( jc_existing is version(jc_proposed, '<') ) ) or
         ( ( jc_version != "latest" ) and ( jc_existing is not version(jc_version, '=') ) )
+
+    - name: Check the installed jc version
+      include_tasks: version.yml
+
+    - name: The installed version of jc
+      debug:
+        msg: "jc version {{ jc_existing }} is installed"
 
   when: jc
   tags:
