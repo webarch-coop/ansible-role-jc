@@ -9,6 +9,12 @@
         state: absent
       when: ( jc_deb is defined ) and ( jc_deb )
 
+    - name: Uninstall pip3 version if present
+      ansible.builtin.pip:
+        name: jc
+        state: absent
+        executable: /usr/bin/pip3
+
     - name: jc git repo present
       ansible.builtin.git:
         repo: https://github.com/kellyjonbrazil/jc.git
