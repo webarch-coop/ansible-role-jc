@@ -20,6 +20,19 @@
           - jc_version is regex('^dev|latest|master$')
       when: jc_install == "git"
 
+    - name: Get the apt package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Loop through the packages to check if jc is installed
+      ansible.builtin.set_fact:
+        jc_deb: true
+      when: pkg.key is regex('^jc$')
+      loop: "{{ ansible_facts.packages | dict2items }}"
+      loop_control:
+        loop_var: pkg
+        label: "{{ pkg.key }}"
+
     - name: Which jc
       ansible.builtin.command: which jc
       check_mode: false
@@ -72,6 +85,7 @@
       when:
         - jc_install == "deb"
         - jc_version is not regex('^dev|latest|master$')
+        - ( jc_deb is not defined ) or ( ( jc_version == "latest" ) and ( jc_existing is version(jc_proposed, '<') ) ) or ( ( jc_version != "latest" ) and ( jc_existing is not version(jc_version, '=') ) )
 
     - name: Include git install tasks
       ansible.builtin.include_tasks: git.yml
@@ -93,17 +107,17 @@
       failed_when: jc_which.rc is not regex('^0|1$')
 
     - name: Something has gone wrong
-      fail:
+      ansible.builtin.fail:
         msg: "Sorry, something has gone wrong, jc is not present"
       when: jc_which.rc != 0
       check_mode: true
 
     - name: Check the installed jc version
-      include_tasks: version.yml
+      ansible.builtin.include_tasks: version.yml
       when: jc_which.rc == 0
 
     - name: The installed version of jc
-      debug:
+      ansible.builtin.debug:
         msg: "jc version {{ jc_existing }} is installed"
 
   when: jc
