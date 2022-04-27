@@ -65,6 +65,11 @@
     - name: Download and install a new version of jc
       block:
 
+        - name: Debug install task to be run
+          debug:
+            msg: "jc is to be installed using {{ jc_install }} version {{ jc_proposed }}"
+            verbosity: 2
+
         - name: Include deb install tasks
           ansible.builtin.include_tasks: deb.yml
           when:
