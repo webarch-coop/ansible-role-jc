@@ -15,7 +15,6 @@
         dest: /usr/local/src/jc
         version: "{{ jc_version }}"
         clone: true
-        bare: true
         force: true
         update: true
 
