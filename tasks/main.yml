@@ -17,7 +17,7 @@
     - name: Check branch variable for git installs
       ansible.builtin.assert:
         that:
-          - jc_version is regex(^dev|latest|master$')
+          - jc_version is regex('^dev|latest|master$')
       when: jc_install == "git"
 
     - name: Which jc
@@ -91,7 +91,7 @@
           ansible.builtin.include_tasks: deb.yml
           when:
             - jc_install == "deb"
-            - jc_version is not regex('^dev|latest|master$') 
+            - jc_version is not regex('^dev|latest|master$')
 
         - name: Include git install tasks
           ansible.builtin.include_tasks: git.yml
@@ -103,7 +103,7 @@
           ansible.builtin.include_tasks: pip.yml
           when:
             - jc_install == "pip"
-            - jc_version is not regex('^dev|latest|master$') 
+            - jc_version is not regex('^dev|latest|master$')
 
       when: >
         ( jc_which.rc == 1 ) or
