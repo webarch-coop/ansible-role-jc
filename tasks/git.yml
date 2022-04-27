@@ -1,0 +1,19 @@
+---
+- name: Install or upgrade jc using pip
+  block:
+
+    - name: Uninstall jc deb if present
+      ansible.builtin.apt:
+        pkg:
+          - jc
+        state: absent
+
+    - name: Install jc using git
+      ansible.builtin.pip:
+        name: "git+https://github.com/kellyjonbrazil/jc.git@{{ jc_version }}"
+        state: forcereinstall
+        executable: /usr/bin/pip3
+
+  tags:
+    - jc
+...

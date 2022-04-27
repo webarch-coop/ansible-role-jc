@@ -1,4 +1,5 @@
 ---
 jc: true
-jc_version: latest
+jc_install: git
+jc_version: master
 ...

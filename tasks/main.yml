@@ -2,6 +2,12 @@
 - name: Install or upgrade jc
   block:
 
+    - name: Check variables
+      ansible.builtin.assert:
+        that:
+          - jc_install is defined
+          - jc_install is regex('^deb|git|pip$')
+
     - name: Which jc
       ansible.builtin.command: which jc
       check_mode: false
@@ -69,19 +75,17 @@
     - name: Download and install a new version of jc
       block:
 
-        - name: Download jc deb
-          ansible.builtin.get_url:
-            url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_amd64.deb"
-            dest: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
-            mode: 0600
-            owner: root
-            group: root
+        - name: Include deb install tasks
+          ansible.builtin.include_tasks: deb.yml
+          when: jc_install == "deb"
 
-        - name: Install jc
-          ansible.builtin.apt:
-            deb: "/root/jc_{{ jc_proposed }}-1_amd64.deb"
-            state: present
-            force: true
+        - name: Include git install tasks
+          ansible.builtin.include_tasks: git.yml
+          when: jc_install == "git"
+
+        - name: Include pip install tasks
+          ansible.builtin.include_tasks: pip.yml
+          when: jc_install == "pip"
 
       when: >
         ( jc_which.rc == 1 ) or
