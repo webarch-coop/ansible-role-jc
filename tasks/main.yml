@@ -2,11 +2,23 @@
 - name: Install or upgrade jc
   block:
 
-    - name: Check variables
+    - name: Check install method variable
       ansible.builtin.assert:
         that:
           - jc_install is defined
           - jc_install is regex('^deb|git|pip$')
+
+    - name: Check version variable for deb and pip installs
+      ansible.builtin.assert:
+        that:
+          - jc_version is regex('^[0-9.]{5,10}$')
+      when: jc_install is regex('^deb|pip$')
+
+    - name: Check branch variable for git installs
+      ansible.builtin.assert:
+        that:
+          - jc_version is regex(^dev|latest|master$')
+      when: jc_install == "git"
 
     - name: Which jc
       ansible.builtin.command: which jc
@@ -60,10 +72,10 @@
 
       when: jc_version == "latest"
 
-    - name: Set a fact for the proposed version of jc when not the latest
+    - name: Set a fact for the proposed version of jc when not dev, latest or master
       ansible.builtin.set_fact:
         jc_proposed: "{{ jc_version | string }}"
-      when: jc_version != "latest"
+      when: jc_version is not regex('^dev|latest|master$')
 
     - name: Debug the proposed version and variable type
       ansible.builtin.debug:
@@ -77,15 +89,21 @@
 
         - name: Include deb install tasks
           ansible.builtin.include_tasks: deb.yml
-          when: jc_install == "deb"
+          when:
+            - jc_install == "deb"
+            - jc_version is not regex('^dev|latest|master$') 
 
         - name: Include git install tasks
           ansible.builtin.include_tasks: git.yml
-          when: jc_install == "git"
+          when:
+            - jc_install == "git"
+            - jc_version is regex('^dev|latest|master$')
 
         - name: Include pip install tasks
           ansible.builtin.include_tasks: pip.yml
-          when: jc_install == "pip"
+          when:
+            - jc_install == "pip"
+            - jc_version is not regex('^dev|latest|master$') 
 
       when: >
         ( jc_which.rc == 1 ) or

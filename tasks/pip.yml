@@ -8,7 +8,7 @@
           - jc
         state: absent
 
-    - name: Install jc using pip3
+    - name: Install jc branch using pip3
       ansible.builtin.pip:
         name: "jc=={{ jc_proposed }}"
         state: forcereinstall

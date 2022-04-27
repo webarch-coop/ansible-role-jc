@@ -8,11 +8,19 @@
           - jc
         state: absent
 
-    - name: Install jc using git
+    - name: Install jc branch using git
       ansible.builtin.pip:
         name: "git+https://github.com/kellyjonbrazil/jc.git@{{ jc_version }}"
         state: forcereinstall
         executable: /usr/bin/pip3
+      when: jc_version is regex('^dev|latest|master$')
+
+    - name: Install jc version using git
+      ansible.builtin.pip:
+        name: "git+https://github.com/kellyjonbrazil/jc.git@v{{ jc_version }}"
+        state: forcereinstall
+        executable: /usr/bin/pip3
+      when: jc_version is not regex('^dev|latest|master$')
 
   tags:
     - jc
