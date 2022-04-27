@@ -72,10 +72,10 @@
 
       when: jc_version == "latest"
 
-    - name: Set a fact for the proposed version of jc when not dev, latest or master
+    - name: Set a fact for the proposed version of jc for deb and pip installs
       ansible.builtin.set_fact:
         jc_proposed: "{{ jc_version | string }}"
-      when: jc_version is not regex('^dev|latest|master$')
+      when: jc_proposed != "latest"
 
     - name: Debug the proposed version and variable type
       ansible.builtin.debug:
