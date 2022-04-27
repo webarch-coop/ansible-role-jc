@@ -24,14 +24,10 @@
       ansible.builtin.package_facts:
         manager: apt
 
-    - name: Loop through the packages to check if jc is installed
+    - name: Set a fact if jc deb is installed
       ansible.builtin.set_fact:
         jc_deb: true
-      when: pkg.key is regex('^jc$')
-      loop: "{{ ansible_facts.packages | dict2items }}"
-      loop_control:
-        loop_var: pkg
-        label: "{{ pkg.key }}"
+      when: ( "jc" in ansible_facts.packages )
 
     - name: Which jc
       ansible.builtin.command: which jc
