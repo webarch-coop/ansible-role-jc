@@ -2,11 +2,17 @@
 - name: Install or upgrade jc using a deb
   block:
 
+    - name: Check if pip3 is present
+      stat:
+        path: /usr/bin/pip3
+      register: jc_pip3 
+
     - name: Uninstall pip3 version if present
       ansible.builtin.pip:
         name: jc
         state: absent
         executable: /usr/bin/pip3
+      when: jc_pip3.stat.exists
 
     - name: Download jc deb
       ansible.builtin.get_url:

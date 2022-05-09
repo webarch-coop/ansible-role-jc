@@ -9,6 +9,12 @@
         state: absent
       when: ( jc_deb is defined ) and ( jc_deb )
 
+    - name: pip3 present
+      apt:
+        pkg:
+          - python3-pip
+        state: present
+
     - name: Install jc branch using pip3
       ansible.builtin.pip:
         name: "jc=={{ jc_proposed }}"
