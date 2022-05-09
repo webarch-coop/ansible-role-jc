@@ -5,7 +5,7 @@
     - name: Check if pip3 is present
       stat:
         path: /usr/bin/pip3
-      register: jc_pip3 
+      register: jc_pip3
 
     - name: Uninstall pip3 version if present
       ansible.builtin.pip:
