@@ -11,7 +11,7 @@
     - name: Check version variable for deb and pip installs
       ansible.builtin.assert:
         that:
-          - jc_version is regex('^[0-9.]{5,10}$')
+          - ( jc_version is regex('^[0-9.]{5,10}$') ) or ( jc_version == "latest" )
       when: jc_install is regex('^deb|pip$')
 
     - name: Check branch variable for git installs
