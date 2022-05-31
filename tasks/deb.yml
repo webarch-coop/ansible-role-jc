@@ -29,6 +29,7 @@
         force: true
         autoclean: true
         autoremove: true
+      when: not ansible_check_mode | bool
 
   tags:
     - jc
