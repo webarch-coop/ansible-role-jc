@@ -111,7 +111,7 @@
       ansible.builtin.debug:
         msg: "jc version {{ jc_existing }} is installed"
 
-  when: jc
+  when: jc | bool
   tags:
     - jc
 ...

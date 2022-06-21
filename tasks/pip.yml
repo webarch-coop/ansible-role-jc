@@ -7,7 +7,7 @@
         pkg:
           - jc
         state: absent
-      when: ( jc_deb is defined ) and ( jc_deb )
+      when: ( jc_deb is defined ) and ( jc_deb | bool )
 
     - name: pip3 present
       apt:
