@@ -19,3 +19,6 @@ The primary URL of this repo is [`https://git.coop/webarch/jc`](https://git.coop
 If you use this role please use a tagged release, see [the release notes](https://git.coop/webarch/jc/-/releases).
 
 This role can also be used with the [localhost repo](https://git.coop/webarch/localhost) to install `jc` locally.
+
+Note that if you wish to use the [community.general.jc](https://blog.kellybrazil.com/2020/08/30/parsing-command-output-in-ansible-with-jc/) Ansible filter plugin then you need to install `jc` using `pip3`.
+
