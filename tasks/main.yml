@@ -20,15 +20,6 @@
           - jc_version is regex('^dev|latest|master$')
       when: jc_install == "git"
 
-    - name: Get the apt package facts
-      ansible.builtin.package_facts:
-        manager: apt
-
-    - name: Set a fact if jc deb is installed
-      ansible.builtin.set_fact:
-        jc_deb: true
-      when: ( "jc" in ansible_facts.packages )
-
     - name: Which jc
       ansible.builtin.command: which jc
       check_mode: false
@@ -84,17 +75,14 @@
 
     - name: Include git install tasks
       ansible.builtin.include_tasks: git.yml
-      when: jc_install == "git"
+      when:
+        - jc_install == "git"
 
     - name: Include pip install tasks
       ansible.builtin.include_tasks: pip.yml
-      when: jc_install == "pip"
-
-    - name: Install Bash completion
-      ansible.builtin.include_tasks: bash.yml
       when:
-        - ( jc_bash is defined ) and ( jc_bash | bool )
-        - ( jc_proposed is version('1.20.1', '>=') ) or ( jc_install == "git" and jc_version is version('1.20.1', '>=') )
+        - jc_install == "pip"
+        - ( jc_pip is not defined ) or ( jc_pip is defined and jc_pip | bool and jc_existing is version(jc_proposed, '<') )
 
     - name: Which jc
       ansible.builtin.command: which jc
@@ -112,6 +100,12 @@
     - name: Check the installed jc version
       ansible.builtin.include_tasks: version.yml
       when: jc_which.rc == 0
+
+    - name: Install Bash completion
+      ansible.builtin.include_tasks: bash.yml
+      when:
+        - ( jc_bash is defined ) and ( jc_bash | bool )
+        - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=')
 
     - name: The installed version of jc
       ansible.builtin.debug:
