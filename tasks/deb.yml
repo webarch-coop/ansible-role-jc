@@ -12,7 +12,7 @@
         name: jc
         state: absent
         executable: /usr/bin/pip3
-      when: jc_pip3.stat.exists
+      when: jc_pip3.stat.exists | bool
 
     - name: Download jc deb
       ansible.builtin.get_url:

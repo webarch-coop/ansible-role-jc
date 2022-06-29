@@ -1,5 +1,6 @@
 ---
 jc: true
+jc_bash: true
 jc_install: deb
 jc_version: latest
 ...

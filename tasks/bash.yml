@@ -1,0 +1,25 @@
+---
+- name: Install Bash completion
+  block:
+
+    - name: Generate Bash completion script
+      ansible.builtin.shell: |
+        set -e -o pipefail
+        jc -B > /root/jc_bash_completion
+      args:
+        executable: "{% if ansible_distribution == 'Ubuntu' %}/usr/bin/bash{% elif ansible_distribution == 'Debian' %}/bin/bash{% endif %}"
+
+    - name: Bash completion script in place
+      ansible.builtin.copy:
+        src: /root/jc_bash_completion
+        dest: /etc/bash_completion.d/jc
+        remote_src: true
+        owner: root
+        group: root
+        mode: 0644
+        validate: bash %s
+
+  when: jc_bash | bool
+  tags:
+    - jc
+...
