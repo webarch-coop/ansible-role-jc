@@ -4,12 +4,12 @@
 
 Ansible role to install [`jc`](https://github.com/kellyjonbrazil/jc) on Debian and Ubuntu using [debs](https://github.com/kellyjonbrazil/jc/releases), [pip3](https://pypi.org/project/jc/) or [git](https://github.com/kellyjonbrazil/jc). 
 
-There are three [default variables](defaults/main.yml):
+There are four [default variables](defaults/main.yml):
 
 | Variable name        | Default value    | Comment                                                                                                                                                                                                                           |
 |----------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `jc`                 | `true`           | Run the tasks in this role, set to `false` for all tasks to be skipped                                                                                                                                                            |
-| `jc_bash`            | `true`           | Install Bash completion                                                                                                                                                                                                           |
+| `jc_bash`            | `true`           | Install Bash completion if the `jc` version is >= 1.20.1                                                                                                                                                                          |
 | `jc_install`         | `deb`            | Install method, set to `deb`, `git` or `pip`                                                                                                                                                                                      |
 | `jc_version`         | `latest`         | Version for `deb` and `pip` installs, or branch (`dev` or `master`) for a `git` install, set to `latest` for the [latest version](https://github.com/kellyjonbrazil/jc/releases/latest) or a version number, for example `1.20.1` |
 
