@@ -105,7 +105,7 @@
       ansible.builtin.include_tasks: bash.yml
       when:
         - ( jc_bash is defined ) and ( jc_bash | bool )
-        - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=')
+        - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=') )
 
     - name: The installed version of jc
       ansible.builtin.debug:
