@@ -58,8 +58,8 @@
     - name: Debug the proposed version and variable type
       ansible.builtin.debug:
         msg:
-          - "variable value {{ jc_proposed }}"
-          - "variable type {{ jc_proposed | type_debug }}"
+          - "jc_proposed variable value {{ jc_proposed }}"
+          - "jc_proposed variable type {{ jc_proposed | type_debug }}"
         verbosity: 2
 
     - name: Debug install task to be run
@@ -77,6 +77,15 @@
       ansible.builtin.include_tasks: git.yml
       when:
         - jc_install == "git"
+
+    - name: Debug pip variables
+      ansible.builtin.debug:
+        msg:
+          - "jc_pip variable value {{ jc_pip }}"
+          - "jc_existing variable value {{ jc_existing }}"
+          - "jc_proposed variable value {{ jc_proposed }}"
+        verbosity: 2
+      when: jc_pip is defined
 
     - name: Include pip install tasks
       ansible.builtin.include_tasks: pip.yml

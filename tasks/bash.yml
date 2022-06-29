@@ -6,6 +6,7 @@
       ansible.builtin.shell: |
         set -e -o pipefail
         jc -B > /root/jc_bash_completion
+      changed_when: false
       args:
         executable: "{% if ansible_distribution == 'Ubuntu' %}/usr/bin/bash{% elif ansible_distribution == 'Debian' %}/bin/bash{% endif %}"
 
