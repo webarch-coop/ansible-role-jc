@@ -21,7 +21,7 @@
     - name: Set a fact when jc is installed using pip3
       ansible.builtin.set_fact:
         jc_pip: true
-      when: jc_pip3_show.rc == 1
+      when: jc_pip3_show.rc == 0
 
     - name: Check the jc version
       ansible.builtin.command: jc -a
