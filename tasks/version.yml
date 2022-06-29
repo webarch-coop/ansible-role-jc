@@ -2,6 +2,27 @@
 - name: Check the version of jc
   block:
 
+    - name: Get the apt package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Set a fact if jc deb is installed
+      ansible.builtin.set_fact:
+        jc_deb: true
+      when: ( "jc" in ansible_facts.packages )
+
+    - name: Check if jc is installed using pip3
+      ansible.builtin.command: pip3 show jc
+      check_mode: false
+      changed_when: false
+      register: jc_pip3_show
+      failed_when: jc_pip3_show.rc is not regex('^0|1$')
+
+    - name: Set a fact when jc is installed using pip3
+      ansible.builtin.set_fact:
+        jc_pip: true
+      when: jc_pip3_show.rc == 1
+
     - name: Check the jc version
       ansible.builtin.command: jc -a
       check_mode: false
@@ -19,8 +40,8 @@
     - name: Debug the existing version and variable type
       ansible.builtin.debug:
         msg:
-          - "variable value {{ jc_existing }}"
-          - "variable type {{ jc_existing | type_debug }}"
+          - "jc_existing variable value {{ jc_existing }}"
+          - "jc_existing variable type {{ jc_existing | type_debug }}"
         verbosity: 2
 
   tags:

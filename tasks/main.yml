@@ -82,7 +82,7 @@
       ansible.builtin.include_tasks: pip.yml
       when:
         - jc_install == "pip"
-        - ( jc_pip is not defined ) or ( jc_pip is defined and jc_pip | bool and jc_existing is version(jc_proposed, '<') )
+        - ( jc_pip is not defined ) or ( jc_pip is defined and jc_pip | bool and jc_existing is defined and jc_existing is version(jc_proposed, '<') )
 
     - name: Which jc
       ansible.builtin.command: which jc
