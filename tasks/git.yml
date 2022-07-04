@@ -9,12 +9,6 @@
         state: absent
       when: ( jc_deb is defined ) and ( jc_deb | bool )
 
-    - name: pip3 present
-      apt:
-        pkg:
-          - python3-pip
-        state: present
-
     - name: jc git repo present
       ansible.builtin.git:
         repo: https://github.com/kellyjonbrazil/jc.git

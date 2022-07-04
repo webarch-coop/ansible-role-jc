@@ -20,6 +20,12 @@
           - jc_version is regex('^dev|latest|master$')
       when: jc_install == "git"
 
+    - name: pip3 present
+      apt:
+        pkg:
+          - python3-pip
+        state: present
+
     - name: Which jc
       ansible.builtin.command: which jc
       check_mode: false
