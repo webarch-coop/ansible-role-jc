@@ -3,10 +3,10 @@ galaxy_info:
   role_name: jc
   namespace: chriscroome
   author: Chris Croome
-  description: Ansible role for installing jc on Debian and Ubuntu using debs from GitHub
+  description: Ansible role for installing jc on Debian and Ubuntu using apt, pip or git
   company: Webarchitects Co-operative
   license: GNU General Public License v3.0 (GPLv3)
-  min_ansible_version: 2.9
+  min_ansible_version: 2.10
   platforms:
     - name: debian
       versions:
@@ -19,7 +19,9 @@ galaxy_info:
         - bionic
         - xenial
   galaxy_tags:
-    - jc
     - debian
+    - jc
+    - json
+    - yaml
     - ubuntu
 ...
