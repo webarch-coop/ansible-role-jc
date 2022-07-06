@@ -121,7 +121,7 @@
       when:
         - ( jc_bash is defined ) and ( jc_bash | bool )
         - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=') )
-        - ( jc_install != "deb" ) or ( jc_install == "deb" and jc_proposed is version('1.20.2', '<') )
+        - ( jc_install != "deb" ) or ( jc_install == "deb" and jc_existing is version('1.20.2', '<') )
 
     - name: The installed version of jc
       ansible.builtin.debug:
