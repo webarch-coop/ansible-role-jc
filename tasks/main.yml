@@ -25,6 +25,7 @@
         pkg:
           - python3-pip
         state: present
+      when: ansible_effective_user_id == 0
 
     - name: Which jc
       ansible.builtin.command: which jc
@@ -78,6 +79,7 @@
       when:
         - jc_install == "deb"
         - ( jc_deb is not defined ) or ( jc_existing is not defined ) or ( ( jc_version == "latest" ) and ( jc_existing is version(jc_proposed, '<') ) ) or ( ( jc_version != "latest" ) and ( jc_existing is not version(jc_version, '=') ) )
+        - ansible_effective_user_id == 0
 
     - name: Include git install tasks
       ansible.builtin.include_tasks: git.yml
@@ -122,6 +124,7 @@
         - ( jc_bash is defined ) and ( jc_bash | bool )
         - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=') )
         - ( jc_install != "deb" ) or ( jc_install == "deb" and jc_existing is version('1.20.2', '<') )
+        - ansible_effective_user_id == 0
 
     - name: The installed version of jc
       ansible.builtin.debug:

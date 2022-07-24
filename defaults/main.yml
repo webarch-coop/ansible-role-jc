@@ -2,5 +2,6 @@
 jc: true
 jc_bash: true
 jc_install: deb
+jc_src: "{% if ansible_effective_user_id == 0 %}/usr/local/src{% else %}~/.local/src{% endif %}"
 jc_version: latest
 ...

@@ -7,12 +7,14 @@
         pkg:
           - jc
         state: absent
-      when: ( jc_deb is defined ) and ( jc_deb | bool )
+      when:
+        - ( jc_deb is defined ) and ( jc_deb | bool )
+        - ( ansible_effective_user_id == 0 )
 
     - name: jc git repo present
       ansible.builtin.git:
         repo: https://github.com/kellyjonbrazil/jc.git
-        dest: /usr/local/src/jc
+        dest: "{{ jc_src }}/jc"
         version: "{{ jc_version }}"
         clone: true
         force: true
@@ -20,13 +22,13 @@
 
     - name: Install jc requirements using pip3 from git repo
       ansible.builtin.pip:
-        requirements: /usr/local/src/jc/requirements.txt
+        requirements: "{{ jc_src }}/jc/requirements.txt"
         state: forcereinstall
         executable: /usr/bin/pip3
 
     - name: Install jc using pip3 from git repo
       ansible.builtin.pip:
-        name: file:///usr/local/src/jc
+        name: "file://{{ jc_src }}/jc"
         state: forcereinstall
         executable: /usr/bin/pip3
 

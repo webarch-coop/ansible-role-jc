@@ -7,7 +7,9 @@
         pkg:
           - jc
         state: absent
-      when: ( jc_deb is defined ) and ( jc_deb | bool )
+      when:
+        - ( jc_deb is defined ) and ( jc_deb | bool )
+        - ( ansible_effective_user_id == 0 )
 
     - name: Install jc using pip3
       ansible.builtin.pip:
