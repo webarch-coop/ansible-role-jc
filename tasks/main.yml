@@ -17,7 +17,7 @@
     - name: Check branch variable for git installs
       ansible.builtin.assert:
         that:
-          - jc_version is regex('^dev|latest|master$')
+          - jc_version is regex('^dev|master$')
       when: jc_install == "git"
 
     - name: pip3 present
