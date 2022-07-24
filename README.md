@@ -4,6 +4,8 @@
 
 Ansible role to install [`jc`](https://github.com/kellyjonbrazil/jc) on Debian and Ubuntu using [apt](https://github.com/kellyjonbrazil/jc/releases), [pip](https://pypi.org/project/jc/) or [git](https://github.com/kellyjonbrazil/jc). 
 
+This role can be run using `become` or as `root` to install `jc` server-wide or as regular user for `git` and `pip` installs into `~/.local/bin`, you might need to update your `$PATH` environmental variable if `~/.local/bin` is not included.
+
 There are four [default variables](defaults/main.yml):
 
 | Variable name        | Default value    | Comment                                                                                                                                                                                                                           |
