@@ -20,12 +20,24 @@
           - jc_version is regex('^dev|master$')
       when: jc_install == "git"
 
+    - name: Fail if a deb install is specified and the role is not being run as root
+      ansible.builtin.fail:
+        msg: "This role can be run without become / as a non-root user for git and pip installs but not for deb installs"
+      when:
+        - jc_install == "deb"
+        - ansible_effective_user_id != 0
+
     - name: pip3 present
-      apt:
+      ansible.builtin.apt:
         pkg:
           - python3-pip
         state: present
       when: ansible_effective_user_id == 0
+
+    - name: Check that pip3 is present
+      ansible.builtin.command: which pip3
+      check_mode: false
+      changed_when: false
 
     - name: Which jc
       ansible.builtin.command: which jc
