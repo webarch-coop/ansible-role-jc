@@ -1,4 +1,29 @@
 ---
+argument_specs:
+  main:
+    author: Chris Croome
+    description: Ansible role to install JC on Debian and Ubuntu using apt, pip or git.
+    short_description: The main entry point for the JC role.
+    options:
+      jc:
+        type: bool
+        required: true
+        description: Run the tasks in this role
+      jc_bash:
+        type: bool
+        required: true
+        description: Install Bash completion if the jc version is >= 1.20.1 and not the .deb package, unless the jc version is <= 1.20.1
+      jc_install:
+        type: str
+        required: true
+        choices:
+          - deb
+          - git
+          - pip
+        description: Install method for JC
+      jc_version:
+        type: str
+        required: true
 galaxy_info:
   role_name: jc
   namespace: chriscroome
@@ -6,7 +31,7 @@ galaxy_info:
   description: Ansible role for installing jc on Debian and Ubuntu using apt, pip or git
   company: Webarchitects Co-operative
   license: GNU General Public License v3.0 (GPLv3)
-  min_ansible_version: 2.10
+  min_ansible_version: 2.11
   platforms:
     - name: debian
       versions:
