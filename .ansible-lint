@@ -1,8 +1,5 @@
 ---
 # https://docs.ansible.com/ansible-lint/rules/default_rules.html
-warn_list:
-  # Computed fully qualified role name of jc does not follow current galaxy requirements
-  - role-name
 skip_list:
   # Perform JSON Schema Validation for known lintable kinds
   - schema
