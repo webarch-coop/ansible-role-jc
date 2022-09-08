@@ -1,0 +1,26 @@
+---
+argument_specs:
+  main:
+    short_description: The main entry point for the JC role.
+    options:
+      jc:
+        type: bool
+        required: true
+        description: Run the tasks in this role
+      jc_bash:
+        type: bool
+        required: true
+        description: Install Bash completion
+      jc_install:
+        type: str
+        required: true
+        description: Install method
+        choices:
+          - deb
+          - git
+          - pip
+      jc_version:
+        type: str
+        required: true
+        description: Version number, branch name or latest
+...
