@@ -16,7 +16,6 @@ argument_specs:
       jc_install:
         type: str
         required: true
-        description: Install method
         choices:
           - deb
           - git
