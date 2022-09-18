@@ -1,8 +1,8 @@
-# Webarchitects jc Ansible role 
+# Webarchitects JC Ansible role 
 
 [![pipeline status](https://git.coop/webarch/jc/badges/main/pipeline.svg)](https://git.coop/webarch/jc/-/commits/main)
 
-Ansible role to install [`jc`](https://github.com/kellyjonbrazil/jc) on Debian and Ubuntu using [apt](https://github.com/kellyjonbrazil/jc/releases), [pip](https://pypi.org/project/jc/) or [git](https://github.com/kellyjonbrazil/jc). 
+Ansible role to install [JC (JSON Convert)](https://github.com/kellyjonbrazil/jc) on Debian and Ubuntu using [apt](https://github.com/kellyjonbrazil/jc/releases), [pip](https://pypi.org/project/jc/) or [git](https://github.com/kellyjonbrazil/jc). 
 
 This role can be run using `become` or as `root` to install `jc` server-wide or as regular user for `git` and `pip` installs into `~/.local/bin`, you might need to update your `$PATH` environmental variable if `~/.local/bin` is not included.
 
@@ -11,7 +11,7 @@ There are four [default variables](defaults/main.yml):
 | Variable name        | Default value    | Comment                                                                                                                                                                                                                           |
 |----------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `jc`                 | `true`           | Run the tasks in this role, set to `false` for all tasks to be skipped                                                                                                                                                            |
-| `jc_bash`            | `true`           | Install Bash completion if the `jc` version is `>= 1.20.1` and not the .`deb` package, unless the `jc` version is `<= 1.20.1`                                                                                                     |
+| `jc_bash`            | `true`           | Install Bash completion if `jc_version` is `>= 1.20.1` and not the .`deb` package, unless `jc_version` is `<= 1.20.1`                                                                                                     |
 | `jc_install`         | `deb`            | Install method, set to `deb`, `git` or `pip`                                                                                                                                                                                      |
 | `jc_version`         | `latest`         | Version for `deb` and `pip` installs, or branch (`dev` or `master`) for a `git` install, set to `latest` for the [latest version](https://github.com/kellyjonbrazil/jc/releases/latest) or a version number, for example `1.20.1` |
 
