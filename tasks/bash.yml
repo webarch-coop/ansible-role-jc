@@ -10,6 +10,14 @@
       args:
         executable: "{% if ansible_distribution == 'Ubuntu' %}/usr/bin/bash{% elif ansible_distribution == 'Debian' %}/bin/bash{% endif %}"
 
+    - name: Bash completion directory present
+      ansible.builtin.file:
+        path: /etc/bash_completion.d
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+
     - name: Bash completion script in place
       ansible.builtin.copy:
         src: /root/jc_bash_completion
