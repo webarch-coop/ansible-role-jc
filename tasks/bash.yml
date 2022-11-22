@@ -32,7 +32,7 @@
         group: root
         mode: 0644
         validate: bash %s
-     when: jc_bash_completion.stat.exists | bool
+      when: jc_bash_completion.stat.exists | bool
 
   when: jc_bash | bool
   tags:
