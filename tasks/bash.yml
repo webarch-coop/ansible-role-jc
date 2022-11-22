@@ -18,6 +18,11 @@
         group: root
         mode: 0755
 
+    - name: Stat /root/jc_bash_completion
+      ansible.builtin.stat:
+        path: /root/jc_bash_completion
+      register: jc_bash_completion
+
     - name: Bash completion script in place
       ansible.builtin.copy:
         src: /root/jc_bash_completion
@@ -27,6 +32,7 @@
         group: root
         mode: 0644
         validate: bash %s
+     when: jc_bash_completion.stat.exists | bool
 
   when: jc_bash | bool
   tags:
