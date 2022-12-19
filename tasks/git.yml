@@ -11,7 +11,7 @@
         - ( jc_deb is defined ) and ( jc_deb | bool )
         - ( ansible_effective_user_id == 0 )
 
-    - name: jc git repo present
+    - name: Git repo for jc present
       ansible.builtin.git:
         repo: https://github.com/kellyjonbrazil/jc.git
         dest: "{{ jc_src }}/jc"
