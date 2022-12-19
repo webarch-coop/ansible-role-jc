@@ -21,10 +21,10 @@
         - jc_install == "deb"
         - ansible_effective_user_id != 0
 
-    - name: Packages pip3 and jc present
+    - name: Packages pip3 and jq present
       ansible.builtin.apt:
         pkg:
-          - jc
+          - jq
           - python3-pip
         state: present
       when: ansible_effective_user_id == 0
