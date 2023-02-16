@@ -8,33 +8,11 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-galaxy_info:
-  role_name: jc
-  namespace: chriscroome
-  author: Chris Croome
-  description: Ansible role for installing JC (JSON Convert), on Debian and Ubuntu using apt, pip or git
-  company: Webarchitects Co-operative
-  license: GNU General Public License v3.0 (GPLv3)
-  min_ansible_version: "2.13"
-  platforms:
-    # https://galaxy.ansible.com/api/v1/platforms/?name__icontains=debian
-    - name: Debian
-      versions:
-        - bookworm
-        - bullseye
-        - buster
-        - stretch
-    # https://galaxy.ansible.com/api/v1/platforms/?name__icontains=ubuntu
-    - name: Ubuntu
-      versions:
-        - jammy
-        - focal
-        - bionic
-        - xenial
-  galaxy_tags:
-    - debian
-    - jc
-    - json
-    - yaml
-    - ubuntu
+# https://yamllint.readthedocs.io/en/stable/integration.html
+# https://github.com/adrienverge/yamllint/tags
+repos:
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.29.0
+    hooks:
+      - id: yamllint
 ...
