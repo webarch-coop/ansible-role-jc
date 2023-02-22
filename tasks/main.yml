@@ -105,7 +105,7 @@
         msg:
           - "jc_proposed variable value {{ jc_proposed }}"
           - "jc_proposed variable type {{ jc_proposed | type_debug }}"
-        verbosity: 2
+        verbosity: 1
 
     - name: Debug install task to be run
       ansible.builtin.debug:
@@ -130,7 +130,7 @@
           - "jc_pipx variable value {{ jc_pipx }}"
           - "jc_existing variable value {{ jc_existing }}"
           - "jc_proposed variable value {{ jc_proposed }}"
-        verbosity: 2
+        verbosity: 1
       when: jc_pipx is defined
 
     - name: Include pipx install tasks

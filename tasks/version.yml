@@ -34,23 +34,31 @@
     - name: Set a fact when jc is installed using pipx
       ansible.builtin.set_fact:
         jc_pipx: true
+        jc_existing: "{{ jc_pipx_list.venvs.jc.metadata.main_package.package_version | string }}"
       when:
         - jc_pipx_list.venvs.jc.metadata.main_package.apps is defined
         - ( "jc" in jc_pipx_list.venvs.jc.metadata.main_package.apps )
 
-    - name: Check the jc version
-      ansible.builtin.command: jc -a
-      check_mode: false
-      changed_when: false
-      register: jc_a
+    - name: Get the JC version by running jc
+      block:
 
-    - name: Set a fact for the existing version information
-      ansible.builtin.set_fact:
-        jc_existing_json: "{{ jc_a.stdout | from_json }}"
+        - name: Check the jc version
+          ansible.builtin.command: jc -a
+          check_mode: false
+          changed_when: false
+          register: jc_a
 
-    - name: Set a fact for the existing version information
-      ansible.builtin.set_fact:
-        jc_existing: "{{ jc_existing_json.version | string }}"
+        - name: Set a fact for the existing version information
+          ansible.builtin.set_fact:
+            jc_existing_json: "{{ jc_a.stdout | from_json }}"
+
+        - name: Set a fact for the existing version information
+          ansible.builtin.set_fact:
+            jc_existing: "{{ jc_existing_json.version | string }}"
+
+      when: >-
+        ( ( jc_deb is defined ) and ( jc_deb | bool ) ) or
+        ( jc_pipx_list.venvs.jc.metadata.main_package.package_version is not defined )
 
     - name: Debug the existing version and variable type
       ansible.builtin.debug:
