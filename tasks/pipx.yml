@@ -28,7 +28,23 @@
         executable: /usr/bin/pipx
       when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
 
-    - name: Uninstall and install jc using pipx
+    - name: Upgrade jc using pipx
+      block:
+
+        - name: Install jc using pipx
+          community.general.pipx:
+            name: jc
+            source: "jc=={{ jc_proposed }}"
+            state: upgrade
+            executable: /usr/bin/pipx
+
+      when:
+        - jc_pipx is defined
+        - jc_pipx | bool
+        - jc_existing is defined
+        - jc_existing is version(jc_proposed, 'lt', version_type='semver')
+
+    - name: Uninstall and install jc using pipx to downgrade the version
       block:
 
         - name: Uninstall jc using pipx
@@ -48,7 +64,7 @@
         - jc_pipx is defined
         - jc_pipx | bool
         - jc_existing is defined
-        - jc_existing is version(jc_proposed, 'ne', version_type='semver')
+        - jc_existing is version(jc_proposed, 'gt', version_type='semver')
 
   tags:
     - jc

@@ -116,7 +116,7 @@
       ansible.builtin.include_tasks: deb.yml
       when:
         - jc_install == "deb"
-        - ( jc_deb is not defined ) or ( jc_existing is not defined ) or ( ( jc_version == "latest" ) and ( jc_existing is version(jc_proposed, '<') ) ) or ( ( jc_version != "latest" ) and ( jc_existing is not version(jc_version, '=') ) )
+        - ( jc_deb is not defined ) or ( jc_existing is not defined ) or ( ( jc_version == "latest" ) and ( jc_existing is ansible.builtin.version(jc_proposed, 'ne', version_type='semver') ) ) or ( ( jc_version != "latest" ) and ( jc_existing is ansible.builtin.version(jc_version, 'ne') ) )
         - ansible_effective_user_id == 0
 
     - name: Include git install tasks
