@@ -25,6 +25,17 @@
         name: jc
         source: "git+https://github.com/kellyjonbrazil/jc.git@{{ jc_version }}"
         executable: /usr/bin/pipx
+      when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
+
+    - name: Reinstall jc using pipx from git repo
+      community.general.pipx:
+        name: jc
+        source: "git+https://github.com/kellyjonbrazil/jc.git@{{ jc_version }}"
+        state: reinstall
+        executable: /usr/bin/pipx
+      when:
+        - jc_pipx is defined
+        - jc_pipx | bool
 
   tags:
     - jc
