@@ -8,7 +8,7 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-- name: Install or upgrade jc using pip
+- name: Install or upgrade jc using pipx
   block:
 
     - name: Uninstall jc deb if present
@@ -20,26 +20,11 @@
         - ( jc_deb is defined ) and ( jc_deb | bool )
         - ( ansible_effective_user_id == 0 )
 
-    - name: Git repo for jc present
-      ansible.builtin.git:
-        repo: https://github.com/kellyjonbrazil/jc.git
-        dest: "{{ jc_src }}/jc"
-        version: "{{ jc_version }}"
-        clone: true
-        force: true
-        update: true
-
-    - name: Install jc requirements using pip3 from git repo
-      ansible.builtin.pip:
-        requirements: "{{ jc_src }}/jc/requirements.txt"
-        state: forcereinstall
-        executable: /usr/bin/pip3
-
-    - name: Install jc using pip3 from git repo
-      ansible.builtin.pip:
-        name: "file://{{ jc_src }}/jc"
-        state: forcereinstall
-        executable: /usr/bin/pip3
+    - name: Install jc using pipx from git repo
+      community.general.pipx:
+        name: jc
+        source: "git+https://github.com/kellyjonbrazil/jc.git@{{ jc_version }}"
+        executable: /usr/bin/pipx
 
   tags:
     - jc

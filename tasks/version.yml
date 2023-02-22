@@ -20,17 +20,23 @@
         jc_deb: true
       when: ( "jc" in ansible_facts.packages )
 
-    - name: Check if jc is installed using pip3
-      ansible.builtin.command: pip3 show jc
+    - name: Check if jc is installed using pipx
+      ansible.builtin.command: pipx list --json
       check_mode: false
       changed_when: false
-      register: jc_pip3_show
-      failed_when: jc_pip3_show.rc is not regex('^0|1$')
+      register: jc_pipx_list_json
+      failed_when: jc_pipx_list_json.rc is not regex('^0|1$')
 
-    - name: Set a fact when jc is installed using pip3
+    - name: Set a fact for the pipx list json results
       ansible.builtin.set_fact:
-        jc_pip: true
-      when: jc_pip3_show.rc == 0
+        jc_pipx_list: "{{ jc_pipx_list_json.stdout | from_json }}"
+
+    - name: Set a fact when jc is installed using pipx
+      ansible.builtin.set_fact:
+        jc_pipx: true
+      when:
+        - jc_pipx_list.venvs.jc.metadata.main_package.apps is defined
+        - ( "jc" in jc_pipx_list.venvs.jc.metadata.main_package.apps )
 
     - name: Check the jc version
       ansible.builtin.command: jc -a

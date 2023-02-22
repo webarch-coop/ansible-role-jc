@@ -11,11 +11,19 @@
 - name: Install or upgrade jc
   block:
 
-    - name: Check version variable for deb and pip installs
+    - name: Include apt role local fact tasks
+      ansible.builtin.include_role:
+        name: apt
+        tasks_from: local_facts.yml
+      when: >-
+        ( ansible_local.dpkg.arch is not defined ) or
+        ( ansible_local.bash.path is not defined )
+
+    - name: Check version variable for deb and pipx installs
       ansible.builtin.assert:
         that:
           - ( jc_version is regex('^[0-9.]{5,10}$') ) or ( jc_version == "latest" )
-      when: jc_install is regex('^deb|pip$')
+      when: jc_install is regex('^deb|pipx$')
 
     - name: Check branch variable for git installs
       ansible.builtin.assert:
@@ -25,35 +33,40 @@
 
     - name: Fail if a deb install is specified and the role is not being run as root
       ansible.builtin.fail:
-        msg: "This role can be run without become / as a non-root user for git and pip installs but not for deb installs"
+        msg: "This role can be run without become / as a non-root user for git and pipx installs but not for deb installs"
       when:
         - jc_install == "deb"
         - ansible_effective_user_id != 0
 
-    - name: Packages pip3 and jq present
+    - name: Packages pipx and jq present
       ansible.builtin.apt:
         pkg:
           - jq
-          - python3-pip
+          - pipx
         state: present
         update_cache: true
       when: ansible_effective_user_id == 0
 
-    - name: Check that pip3 is present
-      ansible.builtin.command: which pip3
+    - name: Check pipx is present for git and pipx installs
+      ansible.builtin.shell: type -p pipx
+      args:
+        executable: "{{ ansible_local.bash.path }}"
       check_mode: false
       changed_when: false
+      when: jc_install is regex('^git|pipx$')
 
-    - name: Which jc
-      ansible.builtin.command: which jc
+    - name: Check jc is present
+      ansible.builtin.shell: type -p jc
+      args:
+        executable: "{{ ansible_local.bash.path }}"
       check_mode: false
       changed_when: false
-      register: jc_which
-      failed_when: jc_which.rc is not regex('^0|1$')
+      register: jc_type_path
+      failed_when: jc_type_path.rc is not regex('^0|1$')
 
     - name: Check the installed jc version
       ansible.builtin.include_tasks: version.yml
-      when: jc_which.rc == 0
+      when: jc_type_path.rc == 0
 
     - name: Find the latest version of jc
       block:
@@ -74,7 +87,7 @@
 
       when: jc_version == "latest"
 
-    - name: Set a fact for the proposed version of jc for deb and pip installs
+    - name: Set a fact for the proposed version of jc for deb and pipx installs
       ansible.builtin.set_fact:
         jc_proposed: "{{ jc_version | string }}"
       when: jc_proposed is not defined
@@ -103,37 +116,39 @@
       when:
         - jc_install == "git"
 
-    - name: Debug pip variables
+    - name: Debug pipx variables
       ansible.builtin.debug:
         msg:
-          - "jc_pip variable value {{ jc_pip }}"
+          - "jc_pipx variable value {{ jc_pipx }}"
           - "jc_existing variable value {{ jc_existing }}"
           - "jc_proposed variable value {{ jc_proposed }}"
         verbosity: 2
-      when: jc_pip is defined
+      when: jc_pipx is defined
 
-    - name: Include pip install tasks
-      ansible.builtin.include_tasks: pip.yml
+    - name: Include pipx install tasks
+      ansible.builtin.include_tasks: pipx.yml
       when:
-        - jc_install == "pip"
-        - ( jc_pip is not defined ) or ( jc_pip is defined and jc_pip | bool and jc_existing is defined and jc_existing is version(jc_proposed, '<') )
+        - jc_install == "pipx"
+        - ( jc_pipx is not defined ) or ( jc_pipx is defined and jc_pipx | bool and jc_existing is defined and jc_existing is version(jc_proposed, '<') )
 
-    - name: Which jc
-      ansible.builtin.command: which jc
+    - name: Check jc path
+      ansible.builtin.shell: type -p jc
+      args:
+        executable: "{{ ansible_local.bash.path }}"
       check_mode: false
       changed_when: false
-      register: jc_which
-      failed_when: jc_which.rc is not regex('^0|1$')
+      register: jc_type_path
+      failed_when: jc_type_path.rc is not regex('^0|1$')
 
     - name: Something has gone wrong
       ansible.builtin.fail:
-        msg: "Sorry, something has gone wrong, jc is not present"
-      when: jc_which.rc != 0
+        msg: "Sorry, something has gone wrong, jc has not be found in the $PATH."
+      when: jc_type_path.rc != 0
       check_mode: true
 
     - name: Check the installed jc version
       ansible.builtin.include_tasks: version.yml
-      when: jc_which.rc == 0
+      when: jc_type_path.rc == 0
 
     - name: Install Bash completion
       ansible.builtin.include_tasks: bash.yml

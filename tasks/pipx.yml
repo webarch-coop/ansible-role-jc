@@ -8,5 +8,36 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-jc_src: "{% if ansible_effective_user_id == 0 %}/usr/local/src{% else %}/home/{{ ansible_user_id }}/.local/src{% endif %}"
+- name: Install or upgrade jc using pipx
+  block:
+
+    - name: Uninstall jc deb if present
+      ansible.builtin.apt:
+        pkg:
+          - jc
+        state: absent
+      when:
+        - ( jc_deb is defined ) and ( jc_deb | bool )
+        - ( ansible_effective_user_id == 0 )
+
+    - name: Install jc using pipx
+      community.general.pipx:
+        name: jc
+        source: "jc=={{ jc_proposed }}"
+        state: present
+        executable: /usr/bin/pipx
+      when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
+
+    - name: Upgrade jc using pipx
+      community.general.pipx:
+        name: jc
+        source: "jc=={{ jc_proposed }}"
+        state: upgrade
+        executable: /usr/bin/pipx
+      when:
+        - jc_pipx is defined
+        - jc_pipx | bool
+
+  tags:
+    - jc
 ...
