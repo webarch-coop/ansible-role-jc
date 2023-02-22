@@ -20,22 +20,49 @@
         - jc_pipx is defined
         - jc_pipx | bool
 
-    - name: Download jc deb
-      ansible.builtin.get_url:
-        url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
-        dest: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
-        mode: "0600"
-        owner: root
-        group: root
+    - name: Run apt-cache policy jc
+      ansible.builtin.command: apt-cache policy jc
+      check_mode: false
+      changed_when: false
+      register: jc_apt_cache_policy
 
-    - name: Install jc deb
+    - name: Set fact for candidate deb version of jc
+      ansible.builtin.set_fact:
+        jc_candidate: "{{ jc_apt_cache_policy.stdout_lines | select('regex', 'Candidate') | community.general.json_query('[0]') | ansible.builtin.regex_replace('Candidate:') | trim | ansible.builtin.regex_replace('[-][0-9]$') | string }}"
+      when: ( "Unable to locate package" not in jc_apt_cache_policy.stdout )
+
+    - name: JC present using apt
       ansible.builtin.apt:
-        deb: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
+        pkg:
+          - jc
         state: present
-        force: true
-        autoclean: true
-        autoremove: true
-      when: not ansible_check_mode | bool
+      when:
+        - jc_candidate is defined
+        - jc_candidate is ansible.builtin.version(jc_proposed, 'eg', version_type='semver')
+
+    - name: JC present using GitHub deb
+      block:
+
+        - name: Download jc deb
+          ansible.builtin.get_url:
+            url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
+            dest: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
+            mode: "0600"
+            owner: root
+            group: root
+
+        - name: Install jc deb
+          ansible.builtin.apt:
+            deb: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
+            state: present
+            force: true
+            autoclean: true
+            autoremove: true
+          when: not ansible_check_mode | bool
+
+      when: >-
+        ( jc_candidate is not defined ) or
+        ( ( jc_candidate is defined ) and ( jc_candidate is ansible.builtin.version(jc_proposed, 'lt', version_type='semver') )
 
   tags:
     - jc

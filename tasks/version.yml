@@ -21,16 +21,6 @@
         jc_existing: "{{ ansible_facts.packages | community.general.json_query('jc[].version|[0]') | ansible.builtin.regex_replace('[-][0-9]$') | string }}"
       when: ( "jc" in ansible_facts.packages )
 
-    - name: Run apt-cache policy jc
-      ansible.builtin.command: apt-cache policy jc
-      register: jc_apt_cache_policy
-
-    - name: Set facts for installed and available deb versions of jc
-      ansible.builtin.set_fact:
-        jc_deb_installed: "{{ jc_apt_cache_policy.stdout_lines | select('regex', '^  Installed') }}"
-
-    - fail:
-
     - name: Check if jc is installed using pipx
       ansible.builtin.command: pipx list --json
       check_mode: false
