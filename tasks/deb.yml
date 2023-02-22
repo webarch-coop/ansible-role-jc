@@ -16,6 +16,9 @@
         name: jc
         state: absent
         executable: /usr/bin/pipx
+      when:
+        - jc_pipx is defined
+        - jc_pipx | bool
 
     - name: Download jc deb
       ansible.builtin.get_url:
