@@ -28,15 +28,27 @@
         executable: /usr/bin/pipx
       when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
 
-    - name: Reinstall jc using pipx
-      community.general.pipx:
-        name: jc
-        source: "jc=={{ jc_proposed }}"
-        state: reinstall
-        executable: /usr/bin/pipx
-      when:
+    - name: Uninstall and install jc using pipx 
+      block:
+
+        - name: Install jc using pipx
+          community.general.pipx:
+            name: jc
+            state: absent
+            executable: /usr/bin/pipx
+
+        - name: Install jc using pipx
+          community.general.pipx:
+            name: jc
+            source: "jc=={{ jc_proposed }}"
+            state: present
+            executable: /usr/bin/pipx
+
+      when: 
         - jc_pipx is defined
         - jc_pipx | bool
+        - jc_existing is defined
+        - jc_existing is version(jc_proposed, 'ne', version_type='semver') )
 
   tags:
     - jc
