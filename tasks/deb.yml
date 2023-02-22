@@ -38,7 +38,7 @@
         state: present
       when:
         - jc_candidate is defined
-        - jc_candidate is ansible.builtin.version(jc_proposed, 'eg', version_type='semver')
+        - jc_candidate is ansible.builtin.version(jc_proposed, 'eq', version_type='semver')
 
     - name: JC present using GitHub deb
       block:
