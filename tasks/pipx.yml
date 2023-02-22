@@ -28,11 +28,11 @@
         executable: /usr/bin/pipx
       when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
 
-    - name: Upgrade jc using pipx
+    - name: Reinstall jc using pipx
       community.general.pipx:
         name: jc
         source: "jc=={{ jc_proposed }}"
-        state: upgrade
+        state: reinstall
         executable: /usr/bin/pipx
       when:
         - jc_pipx is defined

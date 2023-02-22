@@ -121,8 +121,7 @@
 
     - name: Include git install tasks
       ansible.builtin.include_tasks: git.yml
-      when:
-        - jc_install == "git"
+      when: jc_install == "git"
 
     - name: Debug pipx variables
       ansible.builtin.debug:
@@ -133,34 +132,11 @@
         verbosity: 1
       when: jc_pipx is defined
 
-    - name: Debug pipx installed is equal to the required version
-      ansible.builtin.debug:
-        msg:
-          - pipx installed is equal to the required version
-        verbosity: 1
-      when: jc_existing is ansible.builtin.version(jc_proposed, 'eq', version_type='semver')
-
-    - name: Debug pipx installed is greater than required version
-      ansible.builtin.debug:
-        msg:
-          - pipx installed is greater than required version
-        verbosity: 1
-      when: jc_existing is ansible.builtin.version(jc_proposed, 'gt', version_type='semver')
-
-    - name: Debug pipx installed is less than required version
-      ansible.builtin.debug:
-        msg:
-          - pipx installed is less than required version
-        verbosity: 1
-      when: jc_existing is ansible.builtin.version(jc_proposed, 'lt', version_type='semver')
-
     - name: Include pipx install tasks
       ansible.builtin.include_tasks: pipx.yml
       when:
         - jc_install == "pipx"
-        - ( jc_pipx is not defined ) or ( jc_pipx is defined and jc_pipx | bool and jc_existing is defined and jc_existing is version(jc_proposed, '<') )
-
-    - fail:
+        - ( jc_pipx is not defined ) or ( jc_pipx is defined and jc_pipx | bool and jc_existing is defined and jc_existing is version(jc_proposed, 'ne', version_type='semver') )
 
     - name: Check jc path
       ansible.builtin.shell: type -p jc
