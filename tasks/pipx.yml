@@ -28,10 +28,10 @@
         executable: /usr/bin/pipx
       when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
 
-    - name: Uninstall and install jc using pipx 
+    - name: Uninstall and install jc using pipx
       block:
 
-        - name: Install jc using pipx
+        - name: Uninstall jc using pipx
           community.general.pipx:
             name: jc
             state: absent
@@ -44,7 +44,7 @@
             state: present
             executable: /usr/bin/pipx
 
-      when: 
+      when:
         - jc_pipx is defined
         - jc_pipx | bool
         - jc_existing is defined
