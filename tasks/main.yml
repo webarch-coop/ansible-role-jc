@@ -133,6 +133,13 @@
         verbosity: 1
       when: jc_pipx is defined
 
+    - name: Debug pipx versions
+      ansible.builtin.debug:
+        msg:
+          - pipx tasks should be included
+        verbosity: 1
+      when: jc_existing is version(jc_proposed, '<')
+
     - name: Include pipx install tasks
       ansible.builtin.include_tasks: pipx.yml
       when:
