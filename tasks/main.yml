@@ -138,13 +138,15 @@
         msg:
           - pipx tasks should be included
         verbosity: 1
-      when: jc_existing is version(jc_proposed, '<')
+      when: jc_existing is ansible.builtin.version(jc_proposed, 'le', version_type='semver')
 
     - name: Include pipx install tasks
       ansible.builtin.include_tasks: pipx.yml
       when:
         - jc_install == "pipx"
         - ( jc_pipx is not defined ) or ( jc_pipx is defined and jc_pipx | bool and jc_existing is defined and jc_existing is version(jc_proposed, '<') )
+
+    - fail:
 
     - name: Check jc path
       ansible.builtin.shell: type -p jc
