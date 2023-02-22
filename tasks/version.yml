@@ -15,12 +15,13 @@
       ansible.builtin.package_facts:
         manager: apt
 
-    - fail:
-
-    - name: Set a fact if jc deb is installed
+    - name: Set facts if jc deb is installed
       ansible.builtin.set_fact:
         jc_deb: true
+        jc_deb_existing: "{{ ansible_facts.packages.jc.version }}"
       when: ( "jc" in ansible_facts.packages )
+
+    - fail:
 
     - name: Check if jc is installed using pipx
       ansible.builtin.command: pipx list --json
