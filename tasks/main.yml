@@ -46,7 +46,7 @@
         - jc_install == "deb"
         - ansible_effective_user_id != 0
 
-    - name: Packages pipx and jq present
+    - name: Packages pipx, jc and jq present
       ansible.builtin.apt:
         pkg:
           - jq
