@@ -18,10 +18,8 @@
     - name: Set facts if jc deb is installed
       ansible.builtin.set_fact:
         jc_deb: true
-        jc_deb_existing: "{{ ansible_facts.packages | community.general.json_query('jc[].version|[0]') }}"
+        jc_existing: "{{ ansible_facts.packages | community.general.json_query('jc[].version|[0]') | ansible.builtin.regex_replace('[-][0-9]$') | string }}"
       when: ( "jc" in ansible_facts.packages )
-
-    - fail:
 
     - name: Check if jc is installed using pipx
       ansible.builtin.command: pipx list --json
@@ -60,7 +58,7 @@
             jc_existing: "{{ jc_existing_json.version | string }}"
 
       when: >-
-        ( ( jc_deb is defined ) and ( jc_deb | bool ) ) or
+        ( ( jc_deb is not defined ) or ( not jc_deb | bool ) ) or
         ( jc_pipx_list.venvs.jc.metadata.main_package.package_version is not defined )
 
     - name: Debug the existing version and variable type
