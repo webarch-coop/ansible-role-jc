@@ -48,7 +48,7 @@
         - jc_pipx is defined
         - jc_pipx | bool
         - jc_existing is defined
-        - jc_existing is version(jc_proposed, 'ne', version_type='semver') )
+        - jc_existing is version(jc_proposed, 'ne', version_type='semver')
 
   tags:
     - jc
