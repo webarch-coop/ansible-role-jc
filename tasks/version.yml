@@ -40,6 +40,7 @@
         - jc_pipx_list.venvs.jc.metadata.main_package.apps is defined
         - ( "jc" in jc_pipx_list.venvs.jc.metadata.main_package.apps )
 
+    # This shouldn't be needed as jc_existing should be set above
     - name: Get the JC version by running jc
       block:
 
@@ -57,9 +58,7 @@
           ansible.builtin.set_fact:
             jc_existing: "{{ jc_existing_json.version | string }}"
 
-      when: >-
-        ( ( jc_deb is not defined ) or ( not jc_deb | bool ) ) or
-        ( jc_pipx_list.venvs.jc.metadata.main_package.package_version is not defined )
+      when: jc_existing is not defined
 
     - name: Debug the existing version and variable type
       ansible.builtin.debug:
