@@ -19,16 +19,24 @@
         ( ansible_local.dpkg.arch is not defined ) or
         ( ansible_local.bash.path is not defined )
 
+    - name: Check that the install method is valid
+      ansible.builtin.assert:
+        that:
+          - jc_install is regex('^deb|git|pipx$')
+        quiet: "{% if ansible_verbosity == 0 %}true{% else %}false{% endif %}"
+
     - name: Check version variable for deb and pipx installs
       ansible.builtin.assert:
         that:
           - ( jc_version is regex('^[0-9.]{5,10}$') ) or ( jc_version == "latest" )
+        quiet: "{% if ansible_verbosity == 0 %}true{% else %}false{% endif %}"
       when: jc_install is regex('^deb|pipx$')
 
     - name: Check branch variable for git installs
       ansible.builtin.assert:
         that:
           - jc_version is regex('^dev|master$')
+        quiet: "{% if ansible_verbosity == 0 %}true{% else %}false{% endif %}"
       when: jc_install == "git"
 
     - name: Fail if a deb install is specified and the role is not being run as root
