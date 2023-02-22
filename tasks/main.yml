@@ -147,27 +147,30 @@
       register: jc_type_path
       failed_when: jc_type_path.rc is not regex('^0|1$')
 
-    - name: Something has gone wrong
-      ansible.builtin.fail:
-        msg: "Sorry, something has gone wrong, jc has not be found in the $PATH."
-      when: jc_type_path.rc != 0
-      check_mode: true
-
-    - name: Check the installed jc version
-      ansible.builtin.include_tasks: version.yml
-      when: jc_type_path.rc == 0
-
-    - name: Install Bash completion
-      ansible.builtin.include_tasks: bash.yml
-      when:
-        - ( jc_bash is defined ) and ( jc_bash | bool )
-        - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=') )
-        - ( jc_install != "deb" ) or ( jc_install == "deb" and jc_existing is version('1.20.2', '<') )
-        - ansible_effective_user_id == 0
-
-    - name: The installed version of jc
+    - name: Jc is not installed
       ansible.builtin.debug:
-        msg: "jc version {{ jc_existing }} is installed"
+        msg: "jc has not be found in the $PATH."
+      when: jc_type_path.rc != 0
+
+    - name: Tasks when JC is installed
+      block:
+
+        - name: Check the installed jc version
+          ansible.builtin.include_tasks: version.yml
+
+        - name: Install Bash completion
+          ansible.builtin.include_tasks: bash.yml
+          when:
+            - ( jc_bash is defined ) and ( jc_bash | bool )
+            - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=') )
+            - ( jc_install != "deb" ) or ( jc_install == "deb" and jc_existing is version('1.20.2', '<') )
+            - ansible_effective_user_id == 0
+
+        - name: The installed version of jc
+          ansible.builtin.debug:
+            msg: "jc version {{ jc_existing }} is installed"
+
+      when: jc_type_path.rc == 0
 
   when: jc | bool
   tags:
