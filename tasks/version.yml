@@ -18,7 +18,7 @@
     - name: Set facts if jc deb is installed
       ansible.builtin.set_fact:
         jc_deb: true
-        jc_deb_existing: "{{ ansible_facts.packages.jc.version }}"
+        jc_deb_existing: "{{ ansible_facts.packages | community.general.json_query('jc[].version|[0]') }}"
       when: ( "jc" in ansible_facts.packages )
 
     - fail:
