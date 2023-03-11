@@ -62,7 +62,7 @@
 
       when: >-
         ( jc_candidate is not defined ) or
-        ( ( jc_candidate is defined ) and ( jc_candidate is ansible.builtin.version(jc_proposed, 'lt', version_type='semver') )
+        ( ( jc_candidate is defined ) and ( jc_candidate is ansible.builtin.version(jc_proposed, 'lt', version_type='semver') ) )
 
   tags:
     - jc

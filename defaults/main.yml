@@ -11,5 +11,6 @@
 jc: true
 jc_bash: true
 jc_install: deb
-jc_version: latest
+# jc_venv: "{{ ansible_env.HOME }}/.local/pipx/venvs/ansible"
+jc_version: 1.22.5
 ...
