@@ -42,6 +42,10 @@
       loop_control:
         loop_var: molecule_jc_path
 
+    - name: Debug molecule_jc_v
+      ansible.builtin.debug:
+        var: molecule_jc_v
+
     - name: Set facts for the jc versions
       ansible.builtin.set_fact:
         molecule_jc_root_versions: "{{ molecule_jc_v | community.general.json_query('results[].{path: molecule_jc_path, version: stdout_lines[0]}') }}"
@@ -83,6 +87,10 @@
       loop: "{{ molecule_user_which_jc_a.stdout_lines }}"
       loop_control:
         loop_var: molecule_jc_path
+
+    - name: Debug molecule_jc_v
+      ansible.builtin.debug:
+        var: molecule_jc_v
 
     - name: Set facts for the jc versions
       ansible.builtin.set_fact:
