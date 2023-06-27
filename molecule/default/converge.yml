@@ -20,14 +20,6 @@
       ansible.builtin.debug:
         var: ansible_effective_user_id
 
-    - name: Include jc role as user with install set to deb
-      ansible.builtin.include_role:
-        name: jc
-      vars:  # noqa var-naming[no-role-prefix]
-        jc: true
-        jc_install: deb
-        jc_version: 1.22.5
-
     - name: Include jc role as user with install set to git
       ansible.builtin.include_role:
         name: jc

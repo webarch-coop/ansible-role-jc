@@ -45,15 +45,15 @@
 
         - name: Download jc deb
           ansible.builtin.get_url:
-            url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
-            dest: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
+            url: "https://github.com/kellyjonbrazil/jc/releases/download/v{{ jc_proposed }}/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch | default('amd64') }}.deb"
+            dest: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch | default('amd64') }}.deb"
             mode: "0600"
             owner: root
             group: root
 
         - name: Install jc deb
           ansible.builtin.apt:
-            deb: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch }}.deb"
+            deb: "/root/jc_{{ jc_proposed }}-1_{{ ansible_local.dpkg.arch | default('amd64') }}.deb"
             state: present
             force: true
             autoclean: true
