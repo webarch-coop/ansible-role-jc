@@ -30,6 +30,10 @@ argument_specs:
           - git
           - pipx
         description: Install method for JC
+      jc_pipx:
+        type: str
+        required: true
+        description: An internal variable use to records if a pipx version of jc is installed.
       jc_version:
         type: str
         required: true

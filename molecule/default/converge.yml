@@ -20,6 +20,11 @@
       ansible.builtin.debug:
         var: ansible_effective_user_id
 
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
+
     - name: Include jc role as user with install set to git
       ansible.builtin.include_role:
         name: jc
@@ -28,6 +33,11 @@
         jc_install: git
         jc_version: master
 
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
+
     - name: Include jc role as user with install set to pipx
       ansible.builtin.include_role:
         name: jc
@@ -35,6 +45,11 @@
         jc: true
         jc_install: pipx
         jc_version: latest
+
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
 
 - name: Run as root
   become: true
@@ -48,6 +63,11 @@
       ansible.builtin.debug:
         var: ansible_effective_user_id
 
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
+
     - name: Include jc role as root with install set to deb
       ansible.builtin.include_role:
         name: jc
@@ -55,6 +75,11 @@
         jc: true
         jc_install: deb
         jc_version: 1.22.5
+
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
 
     - name: Include jc role as root with install set to git
       ansible.builtin.include_role:
@@ -64,6 +89,11 @@
         jc_install: git
         jc_version: master
 
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
+
     - name: Include jc role as root with install set to pipx
       ansible.builtin.include_role:
         name: jc
@@ -71,4 +101,9 @@
         jc: true
         jc_install: pipx
         jc_version: latest
+
+    - name: Include the version task from the jc role
+      ansible.builtin.include_role:
+        name: jc
+        tasks_from: version.yml
 ...
