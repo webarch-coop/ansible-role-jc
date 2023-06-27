@@ -20,7 +20,27 @@
         - ( jc_deb is defined ) and ( jc_deb | bool )
         - ( ansible_effective_user_id == 0 )
 
-    - name: Debig jc_pipx variable
+    - name: Check if jc is installed using pipx
+      ansible.builtin.command: pipx list --json
+      check_mode: false
+      changed_when: false
+      register: jc_pipx_list_json
+      failed_when: jc_pipx_list_json.rc is not regex('^0|1$')
+
+    - name: Set jc_pipx to false and set a fact for the pipx list json results
+      ansible.builtin.set_fact:
+        jc_pipx: false
+        jc_pipx_list: "{{ jc_pipx_list_json.stdout | from_json }}"
+
+    - name: Set a fact when jc is installed using pipx
+      ansible.builtin.set_fact:
+        jc_pipx: true
+        jc_existing: "{{ jc_pipx_list.venvs.jc.metadata.main_package.package_version | string }}"
+      when:
+        - jc_pipx_list.venvs.jc.metadata.main_package.apps is defined
+        - ( "jc" in jc_pipx_list.venvs.jc.metadata.main_package.apps )
+
+    - name: Debug jc_pipx variable
       ansible.builtin.debug:
         var: jc_pipx
       when: jc_pipx is defined
