@@ -8,9 +8,8 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-jc: false
-jc_bash: true
-jc_install: deb
-# jc_venv: "{{ ansible_env.HOME }}/.local/pipx/venvs/ansible"
-jc_version: 1.22.5
+- name: apt
+  src: https://git.coop/webarch/apt.git
+  version: 2.2.3  # apt
+  scm: git
 ...

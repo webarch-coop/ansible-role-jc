@@ -1,0 +1,94 @@
+# Copyright 2022-2023 Chris Croome
+#
+# This file is part of the Webarchitects JC Ansible role.
+#
+# The Webarchitects JC Ansible role is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# The Webarchitects JC Ansible role is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
+---
+- name: Verify as root
+  become: true
+  connection: local
+  gather_facts: true
+  hosts:
+    - localhost
+  tasks:
+  
+    - name: Run which jc
+      ansible.builtin.command: which jc
+      check_mode: false
+      changed_when: false
+      register: molecule_root_which_jc
+
+    - name: Debug which jc
+      ansible.builtin.debug:
+        var: molecule_root_which_jc.stdout
+
+    - name: Run which jc -a
+      ansible.builtin.command: which jc -a
+      check_mode: false
+      changed_when: false
+      register: molecule_root_which_jc_a
+      failed_when: molecule_root_which_jc_a.rc is not regex('^0|1$')
+
+    - name: Check jc versions
+      ansible.builtin.command: "{{ molecule_jc_path }} --version"
+      check_mode: false
+      changed_when: false
+      register: molecule_jc_v
+      loop: "{{ molecule_root_which_jc_a.stdout_lines }}"
+      loop_control:
+        loop_var: molecule_jc_path
+
+    - name: Set facts for the jc versions
+      ansible.builtin.set_fact:
+        molecule_jc_root_versions: "{{ molecule_jc_v | community.general.json_query('results[].{path: molecule_jc_path, version: stdout_lines[0]}') }}"
+
+    - name: Debug jc versions
+      ansible.builtin.debug:
+        var: molecule_jc_root_versions
+
+- name: Verify as user
+  become: false
+  connection: local
+  gather_facts: true
+  hosts:
+    - localhost
+  tasks:
+
+    - name: Run which jc
+      ansible.builtin.command: which jc
+      check_mode: false
+      changed_when: false
+      register: molecule_user_which_jc
+
+    - name: Debug which jc
+      ansible.builtin.debug:
+        var: molecule_user_which_jc.stdout
+
+    - name: Run which jc -a
+      ansible.builtin.command: which jc -a
+      check_mode: false
+      changed_when: false
+      register: molecule_user_which_jc_a
+      failed_when: molecule_user_which_jc_a.rc is not regex('^0|1$')
+
+    - name: Check jc versions
+      ansible.builtin.command: "{{ molecule_jc_path }} --version"
+      check_mode: false
+      changed_when: false
+      register: molecule_jc_v
+      loop: "{{ molecule_user_which_jc_a.stdout_lines }}"
+      loop_control:
+        loop_var: molecule_jc_path
+
+    - name: Set facts for the jc versions
+      ansible.builtin.set_fact:
+        molecule_jc_user_versions: "{{ molecule_jc_v | community.general.json_query('results[].{path: molecule_jc_path, version: stdout_lines[0]}') }}"
+
+    - name: Debug jc versions
+      ansible.builtin.debug:
+        var: molecule_jc_user_versions
+...
