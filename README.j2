@@ -16,26 +16,43 @@ Set `jc` to `true` for the tasks in this role to be run, see [default variables]
 
 The following documentation has been generated from the [meta/argument_specs.yml](meta/argument_specs.yml).
 
-### Entrypoint: main
+{% for entrypoint in argument_specs.keys() %}
+{%- set path, options=entrypoint_options[entrypoint][0] -%}
+### Entrypoint: {{ entrypoint }}
 
-The main entry point for the JC role.
+{{ argument_specs[entrypoint].short_description }}
 
 |Option|Description|Type|Required|
 |---|---|---|---|
-| jc | Run the tasks in this role | bool | yes |
-| jc_bash | Install Bash completion if the jc version is >= 1.20.1 and not the .deb package, unless the jc version is <= 1.20.1 | bool | yes |
-| jc_install | Install method for JC | str | yes |
-| jc_version | Version number, branch name or latest | str | yes |
+{%- for name, details in options.items() %}
+| {{ name }} | {{ details.display_description }} | {{ details.display_type }} | {{ details.display_required }} |
+{%- endfor %}
 
-#### Choices for main > jc_install
+{% if entrypoint_options[entrypoint] | length > 1 -%}
+{% for path, options in entrypoint_options[entrypoint][1:] -%}
+#### Options for {{ path | join(" > ") }}
+
+|Option|Description|Type|Required|
+|---|---|---|---|
+{%- for name, details in options.items() %}
+| {{ name }} | {{ details.display_description }} | {{ details.display_type }} | {{ details.display_required }} |
+{%- endfor %}
+
+{% endfor -%}
+{% endif -%}
+{% if entrypoint in entrypoint_choices -%}
+{% for path, choices in entrypoint_choices[entrypoint] -%}
+#### Choices for {{ path | join(" > ") }}
 
 |Choice|
 |---|
-| deb |
-| git |
-| pipx |
+{%- for item in choices %}
+| {{ item }} |
+{%- endfor %}
 
-
+{% endfor -%}
+{% endif -%}
+{% endfor %}
 ## Repository
 
 The primary URL of this repo is [`https://git.coop/webarch/jc`](https://git.coop/webarch/jc) however it is also [mirrored to GitHub](https://github.com/webarch-coop/ansible-role-jc) and [available via Ansible Galaxy](https://galaxy.ansible.com/chriscroome/jc).
