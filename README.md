@@ -2,11 +2,11 @@
 
 [![pipeline status](https://git.coop/webarch/jc/badges/main/pipeline.svg)](https://git.coop/webarch/jc/-/commits/main)
 
-Ansible role to install [JC (JSON Convert)](https://github.com/kellyjonbrazil/jc) on Debian and Ubuntu using [apt](https://github.com/kellyjonbrazil/jc/releases), [pipx](https://pypi.org/project/jc/) or [git](https://github.com/kellyjonbrazil/jc). 
+Ansible role to install [JC (JSON Convert)](https://github.com/kellyjonbrazil/jc) on Debian and Ubuntu using [apt](https://github.com/kellyjonbrazil/jc/releases), [pipx](https://pypi.org/project/jc/) or [git](https://github.com/kellyjonbrazil/jc).
 
 ## Usage
 
-This role can be run using `become` or as `root` to install `jc` server-wide or as regular user for `git` installs, usig `pipx` into `~/.local/bin`, you might need to update your `$PATH` environmental variable if `~/.local/bin` is not included.
+This role can be run using `become` or as `root` to install `jc` server-wide or as regular user for `git` installs, usig `pipx` into `~/.local/bin`, you might need to update your `$PATH` environmental variable if `~/.local/bin` is not includedn in it already.
 
 This role can be used via the [localhost repo](https://git.coop/webarch/localhost) to install `jc` locally.
 
