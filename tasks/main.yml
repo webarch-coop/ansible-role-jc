@@ -16,8 +16,9 @@
         name: apt
         tasks_from: local_facts.yml
       when: >-
-        ( ansible_local.dpkg.arch is not defined ) or
-        ( ansible_local.bash.path is not defined )
+        ( ansible_effective_user_id == 0 ) and
+        ( ( ansible_local.dpkg.arch is not defined ) or
+        ( ansible_local.bash.path is not defined ) )
 
     - name: Check that the install method is valid
       ansible.builtin.assert:
@@ -58,7 +59,7 @@
     - name: Check pipx is present for git and pipx installs
       ansible.builtin.shell: type -p pipx
       args:
-        executable: "{{ ansible_local.bash.path }}"
+        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
       check_mode: false
       changed_when: false
       when: jc_install is regex('^git|pipx$')
@@ -66,7 +67,7 @@
     - name: Check jc is present
       ansible.builtin.shell: type -p jc
       args:
-        executable: "{{ ansible_local.bash.path }}"
+        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
       check_mode: false
       changed_when: false
       register: jc_type_path
@@ -141,7 +142,7 @@
     - name: Check jc path
       ansible.builtin.shell: type -p jc
       args:
-        executable: "{{ ansible_local.bash.path }}"
+        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
       check_mode: false
       changed_when: false
       register: jc_type_path
