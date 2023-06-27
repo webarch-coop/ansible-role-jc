@@ -22,10 +22,10 @@ The main entry point for the JC role.
 
 |Option|Description|Type|Required|
 |---|---|---|---|
-| jc | Run the tasks in this role | bool | yes |
-| jc_bash | Install Bash completion if the jc version is >= 1.20.1 and not the .deb package, unless the jc version is <= 1.20.1 | bool | yes |
-| jc_install | Install method for JC | str | yes |
-| jc_version | Version number, branch name or latest | str | yes |
+| jc | Run the tasks in this role. | bool | yes |
+| jc_bash | Install Bash completion if the jc version is >= 1.20.1 and not the .deb package, unless the jc version is <= 1.20.1. | bool | yes |
+| jc_install | Install method for JC. | str | yes |
+| jc_version | JC version number, branch name or latest. | str | yes |
 
 #### Choices for main > jc_install
 
