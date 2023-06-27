@@ -15,7 +15,7 @@
   hosts:
     - localhost
   tasks:
-  
+
     - name: Run which jc
       ansible.builtin.command: which jc
       check_mode: false
@@ -42,9 +42,9 @@
       loop_control:
         loop_var: molecule_jc_path
 
-    - name: Debug molecule_jc_v
-      ansible.builtin.debug:
-        var: molecule_jc_v
+    # - name: Debug molecule_jc_v
+    #   ansible.builtin.debug:
+    #     var: molecule_jc_v
 
     - name: Set facts for the jc versions
       ansible.builtin.set_fact:
@@ -88,9 +88,9 @@
       loop_control:
         loop_var: molecule_jc_path
 
-    - name: Debug molecule_jc_v
-      ansible.builtin.debug:
-        var: molecule_jc_v
+    # - name: Debug molecule_jc_v
+    #   ansible.builtin.debug:
+    #     var: molecule_jc_v
 
     - name: Set facts for the jc versions
       ansible.builtin.set_fact:
