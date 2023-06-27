@@ -20,6 +20,11 @@
         - ( jc_deb is defined ) and ( jc_deb | bool )
         - ( ansible_effective_user_id == 0 )
 
+    - name: Debig jc_pipx variable
+      ansible.builtin.debug:
+        var: jc_pipx
+      when: jc_pipx is defined
+
     - name: Install jc using pipx from git repo
       community.general.pipx:
         name: jc
