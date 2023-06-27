@@ -8,6 +8,13 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
+- name: Skip the tasks in this role as jc is false
+  ansible.builtin.debug:
+    msg: "The jc variable need to be true for the tasks in this role to run."
+  when: not jc | bool
+  tags:
+    - jc
+
 - name: Install or upgrade jc
   block:
 
