@@ -58,7 +58,6 @@
       ansible.builtin.apt:
         pkg:
           - jq
-          - pipx
         state: present
         update_cache: true
       when: ansible_effective_user_id == 0
@@ -66,7 +65,7 @@
     - name: Pipx present from backports on Debian Bullseye
       block:
 
-        - name: Run apt-cache policy matrix-synapse
+        - name: Run apt-cache policy pipx
           ansible.builtin.command: apt-cache policy pipx
           check_mode: false
           changed_when: false
