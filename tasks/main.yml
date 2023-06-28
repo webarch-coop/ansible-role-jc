@@ -54,7 +54,7 @@
         - jc_install == "deb"
         - ansible_effective_user_id != 0
 
-    - name: Packages pipx, jc and jq present
+    - name: Package jq present
       ansible.builtin.apt:
         pkg:
           - jq
@@ -62,6 +62,37 @@
         state: present
         update_cache: true
       when: ansible_effective_user_id == 0
+
+    - name: Pipx present from backports on Debian Bullseye
+      block:
+
+        - name: Run apt-cache policy matrix-synapse
+          ansible.builtin.command: apt-cache policy pipx
+          check_mode: false
+          changed_when: false
+          register: jc_apt_cache_policy_pipx
+
+        - name: Install Pipx from backports  # noqa yaml[comments] package-latest
+          ansible.builtin.apt:
+            pkg:
+              - pipx
+            state: latest
+            default_release: "{{ ansible_distribution_release }}-backports"
+          when:
+            - ansible_effective_user_id == 0
+            - ( "-backports" in jc_apt_cache_policy_pipx.stdout )
+
+      when: ansible_distribution_release == "bullseye"
+
+    - name: Package pipx present
+      ansible.builtin.apt:
+        pkg:
+          - pipx
+        state: present
+        update_cache: true
+      when:
+        - ansible_effective_user_id == 0
+        - ansible_distribution_release != "bullseye"
 
     - name: Check pipx is present for git and pipx installs
       ansible.builtin.shell: type -p pipx
