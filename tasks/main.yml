@@ -57,46 +57,35 @@
     - name: Root apt tasks
       block:
 
-        - name: Package jq present
-          ansible.builtin.apt:
-            pkg:
-              - jq
-            state: present
-            update_cache: true
-
-        - name: Pipx present from backports on Debian Bullseye
+        - name: Check that Backports are enabled on Debian Bullseye for pipx
           block:
 
-            - name: Run apt-cache policy pipx
+            - name: Use apt-cache policy pipx to check if pipx is available or installed
               ansible.builtin.command: apt-cache policy pipx
               check_mode: false
               changed_when: false
               register: jc_apt_cache_policy_pipx
 
-            - name: Include apt role to enable backports
-              ansible.builtin.include_role:
-                name: apt
-              vars:
-                apt_backports: true
-              when: ( "bullseye-backports" not in jc_apt_cache_policy_pipx.stdout )
-
-            - name: Install Pipx from backports  # noqa yaml[comments] package-latest
-              ansible.builtin.apt:
-                pkg:
-                  - pipx
-                state: latest
-                default_release: "{{ ansible_distribution_release }}-backports"
-              when: ( "bullseye-backports" in jc_apt_cache_policy_pipx.stdout )
+            - name: Backports are required when pipx is not installed or unavailable on Debian Bullseye
+              ansible.builtin.assert:
+                that: >-
+                  ( "Installed" in jc_apt_cache_policy_pipx.stdout ) or
+                  ( "bullseye-backports" in jc_apt_cache_policy_pipx.stdout )
+                fail_msg:
+                  - "Backports need to be enabled on Debian Bullseye for pipx to be installed."
+                  - "apt-cache policy pipx stdout {{ jc_apt_cache_policy_pipx.stdout }}"
+                  - "apt-cache policy pipx stderr {{ jc_apt_cache_policy_pipx.stderr }}"
+                quiet: "{% if ansible_verbosity == 0 %}true{% else %}false{% endif %}"
 
           when: ansible_distribution_release == "bullseye"
 
-        - name: Package pipx present
+        - name: Packages jq and pipx present
           ansible.builtin.apt:
             pkg:
+              - jq
               - pipx
             state: present
             update_cache: true
-          when: ansible_distribution_release != "bullseye"
 
       when: ansible_effective_user_id == 0
 
