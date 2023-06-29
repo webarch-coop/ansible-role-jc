@@ -60,7 +60,7 @@
         - name: Check that Backports are enabled on Debian Bullseye for pipx
           block:
 
-            - name: Use apt-cache policy pipx to check if pipx is available or installed
+            - name: Run apt-cache policy pipx to check if pipx is available or installed
               ansible.builtin.command: apt-cache policy pipx
               check_mode: false
               changed_when: false
