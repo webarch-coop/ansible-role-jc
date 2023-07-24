@@ -8,7 +8,7 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-dependency: 
+dependency:
   name: galaxy
 platforms:
   - name: instance
