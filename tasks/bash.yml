@@ -30,7 +30,22 @@
     - name: Stat /root/jc_bash_completion
       ansible.builtin.stat:
         path: /root/jc_bash_completion
-      register: jc_bash_completion
+      register: jc_bash_completion_proposed
+
+    - name: Debug jc_bash_completion_proposed
+      ansible.builtin.debug:
+        var: jc_bash_completion_proposed
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
+
+    - name: Stat /root/jc_bash_completion
+      ansible.builtin.stat:
+        path: /etc/bash_completion.d/jc
+      register: jc_bash_completion_existing
+
+    - name: Debug jc_bash_completion_existing
+      ansible.builtin.debug:
+        var: jc_bash_completion_existing
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
 
     - name: Bash completion script in place
       ansible.builtin.copy:
@@ -41,7 +56,9 @@
         group: root
         mode: "0644"
         validate: bash %s
-      when: jc_bash_completion.stat.exists | bool
+      when:
+        - jc_bash_completion_proposed.stat.exists | bool
+        - ( not jc_bash_completion_existing.stat.exists | bool ) or ( jc_bash_completion_proposed.stat.checksum != jc_bash_completion_existing.stat.checksum )
 
   when: jc_bash | bool
   tags:

@@ -20,6 +20,12 @@
         - ( jc_deb is defined ) and ( jc_deb | bool )
         - ( ansible_effective_user_id == 0 )
 
+    - name: Debug jc_pipx
+      ansible.builtin.debug:
+        var: jc_pipx
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
+      when: jc_pipx is defined
+
     - name: Install jc using pipx
       community.general.pipx:
         name: jc
