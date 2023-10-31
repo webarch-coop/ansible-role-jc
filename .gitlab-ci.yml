@@ -30,8 +30,8 @@ before_script:
 stages:
   - bookworm
   # - bullseye
-  # - jammy
-  # - trixie
+  - jammy
+  - trixie
 bookworm:
   image: registry.git.coop/webarch/containers/images/bookworm:20231016
   stage: bookworm
@@ -42,14 +42,14 @@ bookworm:
 #   stage: bullseye
 #   script:
 #     - molecule test
-# jammy:
-#   image: registry.git.coop/webarch/containers/images/jammy:20231016
-#   stage: jammy
-#   script:
-#     - molecule test
-# trixie:
-#   image: registry.git.coop/webarch/containers/images/trixie:20231016
-#   stage: trixie
-#   script:
-#     - molecule test
+jammy:
+  image: registry.git.coop/webarch/containers/images/jammy:20231016
+  stage: jammy
+  script:
+    - molecule test
+trixie:
+  image: registry.git.coop/webarch/containers/images/trixie:20231016
+  stage: trixie
+  script:
+    - molecule test
 ...
