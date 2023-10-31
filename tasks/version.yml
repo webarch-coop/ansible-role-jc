@@ -21,6 +21,10 @@
         jc_existing: "{{ ansible_facts.packages | community.general.json_query('jc[].version|[0]') | ansible.builtin.regex_replace('[-][0-9]$') | string }}"
       when: ( "jc" in ansible_facts.packages )
 
+    - name: Debug jc_existing
+      ansible.builtin.debug:
+        var: jc_existing
+
     - name: Check if jc is installed using pipx
       ansible.builtin.command: pipx list --json
       check_mode: false
@@ -39,6 +43,10 @@
       when:
         - jc_pipx_list.venvs.jc.metadata.main_package.apps is defined
         - ( "jc" in jc_pipx_list.venvs.jc.metadata.main_package.apps )
+
+    - name: Debug jc_existing
+      ansible.builtin.debug:
+        var: jc_existing
 
     # This shouldn't be needed as jc_existing should be set above
     - name: Get the JC version by running jc
