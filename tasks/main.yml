@@ -156,7 +156,7 @@
     - name: Debug install task to be run
       ansible.builtin.debug:
         msg: "jc is to be installed using {{ jc_install }} version {{ jc_proposed }}"
-        verbosity: 2
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
 
     - name: Include deb install tasks
       ansible.builtin.include_tasks: deb.yml
@@ -175,7 +175,7 @@
           - "jc_pipx variable value {{ jc_pipx }}"
           - "jc_existing variable value {{ jc_existing }}"
           - "jc_proposed variable value {{ jc_proposed }}"
-        verbosity: 1
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
       when: jc_pipx is defined
 
     - name: Include pipx install tasks
@@ -196,6 +196,7 @@
     - name: Debug jc_type_path
       ansible.builtin.debug:
         var: jc_type_path.stdout
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
 
     - name: Jc is not installed
       ansible.builtin.debug:
@@ -219,6 +220,7 @@
         - name: The installed version of jc
           ansible.builtin.debug:
             msg: "jc version {{ jc_existing }} is installed"
+            verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
 
       when: jc_type_path.rc == 0
 
