@@ -17,8 +17,9 @@
           - jc
         state: absent
       when:
-        - ( jc_deb is defined ) and ( jc_deb | bool )
-        - ( ansible_effective_user_id == 0 )
+        - jc_deb is defined
+        - jc_deb | bool
+        - ansible_effective_user_id == 0
 
     - name: Debug jc_pipx
       ansible.builtin.debug:

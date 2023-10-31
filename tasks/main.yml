@@ -193,14 +193,14 @@
       register: jc_type_path
       failed_when: jc_type_path.rc is not regex('^0|1$')
 
+    - name: Debug jc_type_path
+      ansible.builtin.debug:
+        var: jc_type_path.stdout
+
     - name: Jc is not installed
       ansible.builtin.debug:
         msg: "jc has not be found in the $PATH."
       when: jc_type_path.rc != 0
-
-    - name: Check the installed jc version
-      ansible.builtin.include_tasks: version.yml
-      when: jc_type_path.rc == 0
 
     - name: Tasks when JC is installed
       block:
