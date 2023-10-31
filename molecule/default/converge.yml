@@ -30,6 +30,10 @@
       ansible.builtin.debug:
         var: ansible_user_dir
 
+    - name: Debug ansible_env
+      ansible.builtin.debug:
+        var: ansible_env
+
     - name: Include jc role as root with install set to pipx
       ansible.builtin.include_role:
         name: jc
