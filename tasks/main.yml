@@ -198,6 +198,10 @@
         msg: "jc has not be found in the $PATH."
       when: jc_type_path.rc != 0
 
+    - name: Check the installed jc version
+      ansible.builtin.include_tasks: version.yml
+      when: jc_type_path.rc == 0
+
     - name: Tasks when JC is installed
       block:
 
