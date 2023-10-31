@@ -15,6 +15,7 @@ variables:
   ANSIBLE_REMOTE_TMP: "/tmp"
   ANSIBLE_SHELL_ALLOW_WORLD_READABLE_TEMP: "1"
   DEFAULT_MANAGED_STR: "Ansible managed"
+  HOME: /root
   MOLECULE_VERBOSITY: "0"
   PY_COLORS: "1"
 before_script:
