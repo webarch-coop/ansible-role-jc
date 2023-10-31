@@ -25,7 +25,23 @@ The main entry point for the JC role.
 | jc | Run the tasks in this role. | bool | yes |
 | jc_bash | Install Bash completion if the jc version is >= 1.20.1 and not the .deb package, unless the jc version is <= 1.20.1. | bool | yes |
 | jc_install | Install method for JC. | str | yes |
+| jc_pipx_root_env | The pipx environment variables for the root user. | dict of 'jc_pipx_root_env' options | no |
+| jc_pipx_user_env | The pipx environment variables for a regular user. | dict of 'jc_pipx_user_env' options | no |
 | jc_version | JC version number, branch name or latest. | str | yes |
+
+#### Options for main > jc_pipx_root_env
+
+|Option|Description|Type|Required|
+|---|---|---|---|
+| PIPX_HOME | The PIPX_HOME environment variable value for pipx when run as root. | str | no |
+| PIPX_BIN_DIR | The PIPX_BIN_DIR environment variable value for pipx when run as root. | str | no |
+
+#### Options for main > jc_pipx_user_env
+
+|Option|Description|Type|Required|
+|---|---|---|---|
+| PIPX_HOME | The PIPX_HOME environment variable value for pipx when run as a regular user. | str | no |
+| PIPX_BIN_DIR | The PIPX_BIN_DIR environment variable value for pipx when run as a regular user. | str | no |
 
 #### Choices for main > jc_install
 
