@@ -27,7 +27,7 @@
         state: present
         install_deps: true
         executable: /usr/bin/pipx
-      environment: "{% if jcible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
+      environment: "{% if ansible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
       when: ( jc_pipx is not defined ) or ( not jc_pipx | bool )
 
     - name: Upgrade jc using pipx
@@ -37,7 +37,7 @@
         state: upgrade
         install_deps: true
         executable: /usr/bin/pipx
-      environment: "{% if jcible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
+      environment: "{% if ansible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
       when:
         - jc_pipx is defined
         - jc_pipx | bool
@@ -52,7 +52,7 @@
             name: jc
             state: absent
             executable: /usr/bin/pipx
-          environment: "{% if jcible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
+          environment: "{% if ansible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
 
         - name: Install jc using pipx
           community.general.pipx:
@@ -61,7 +61,7 @@
             state: present
             install_deps: true
             executable: /usr/bin/pipx
-          environment: "{% if jcible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
+          environment: "{% if ansible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
 
       when:
         - jc_pipx is defined
