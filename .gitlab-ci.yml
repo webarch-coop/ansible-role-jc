@@ -9,20 +9,17 @@
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
 variables:
+  ANSIBLE_CALLBACK_RESULT_FORMAT: "yaml"
   ANSIBLE_DISPLAY_SKIPPED_HOSTS: "0"
   ANSIBLE_FORCE_COLOR: "1"
-  GIT_STRATEGY: none
+  ANSIBLE_REMOTE_TMP: "/tmp"
+  ANSIBLE_SHELL_ALLOW_WORLD_READABLE_TEMP: "1"
+  DEFAULT_MANAGED_STR: "Ansible managed"
   MOLECULE_VERBOSITY: "0"
   PY_COLORS: "1"
 before_script:
-  - cd
-  - source ~/.profile
-  - mkdir -p builds/${CI_PROJECT_ROOT_NAMESPACE}
-  - cd builds/${CI_PROJECT_ROOT_NAMESPACE}
-  - git clone ${CI_PROJECT_URL}.git
-  - ansible-galaxy install -r ${CI_PROJECT_NAME}/meta/requirements.yml
-  - cd ${CI_PROJECT_NAME}
-  - cat /etc/debian_version
+  - whoami
+  - pwd
   - which ansible
   - ansible --version
   - which yamllint
@@ -31,21 +28,27 @@ before_script:
   - molecule --version
 stages:
   - bookworm
-  - bullseye
+  # - bullseye
   - jammy
+  - trixie
 bookworm:
-  image: registry.git.coop/webarch/containers/images/bookworm:20230605
+  image: registry.git.coop/webarch/containers/images/bookworm:20231016
   stage: bookworm
   script:
     - molecule test
-bullseye:
-  image: registry.git.coop/webarch/containers/images/bullseye:20230605
-  stage: bullseye
+# bullseye:
+#   image: registry.git.coop/webarch/containers/images/bullseye:20231016
+#   stage: bullseye
+#   script:
+#     - molecule test
+jammy:
+  image: registry.git.coop/webarch/containers/images/jammy:20231016
+  stage: jammy
   script:
     - molecule test
-jammy:
-  image: registry.git.coop/webarch/containers/images/jammy:20230605
-  stage: jammy
+trixie:
+  image: registry.git.coop/webarch/containers/images/trixie:20231016
+  stage: trixie
   script:
     - molecule test
 ...

@@ -8,67 +8,33 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-- name: Run as user
-  become: false
+- name: Run as root
+  become: true
   connection: local
-  gather_facts: true
+  # gather_facts: true
   hosts:
     - localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
 
     - name: Debug ansible_effective_user_id
       ansible.builtin.debug:
         var: ansible_effective_user_id
 
-    # - name: Include jc role as user with install set to git
-    #   ansible.builtin.include_role:
-    #     name: jc
-    #   vars:  # noqa var-naming[no-role-prefix]
-    #     jc: true
-    #     jc_install: git
-    #     jc_version: master
+    - name: Debug ansible_user_id
+      ansible.builtin.debug:
+        var: ansible_user_id
 
-    - name: Include jc role as user with install set to pipx
+    - name: Debug ansible_user_dir
+      ansible.builtin.debug:
+        var: ansible_user_dir
+
+    - name: Include jc role as root with install set to pipx
       ansible.builtin.include_role:
         name: jc
       vars:  # noqa var-naming[no-role-prefix]
         jc: true
         jc_install: pipx
         jc_version: latest
-
-- name: Run as root
-  become: true
-  connection: local
-  gather_facts: true
-  hosts:
-    - localhost
-  tasks:
-
-    - name: Debug ansible_effective_user_id
-      ansible.builtin.debug:
-        var: ansible_effective_user_id
-
-    - name: Include jc role as root with install set to deb
-      ansible.builtin.include_role:
-        name: jc
-      vars:  # noqa var-naming[no-role-prefix]
-        jc: true
-        jc_install: deb
-        jc_version: 1.22.5
-
-    # - name: Include jc role as root with install set to git
-    #   ansible.builtin.include_role:
-    #     name: jc
-    #   vars:  # noqa var-naming[no-role-prefix]
-    #     jc: true
-    #     jc_install: git
-    #     jc_version: master
-
-    # - name: Include jc role as root with install set to pipx
-    #   ansible.builtin.include_role:
-    #     name: jc
-    #   vars:  # noqa var-naming[no-role-prefix]
-    #     jc: true
-    #     jc_install: pipx
-    #     jc_version: latest
 ...
