@@ -21,6 +21,7 @@ variables:
 before_script:
   - whoami
   - pwd
+  - chmod 700 $(pwd)
   - which ansible
   - ansible --version
   - which yamllint
@@ -33,22 +34,22 @@ stages:
   - jammy
   - trixie
 bookworm:
-  image: registry.git.coop/webarch/containers/images/bookworm:20231016
+  image: registry.git.coop/webarch/containers/images/bookworm:20231213
   stage: bookworm
   script:
     - molecule test
 # bullseye:
-#   image: registry.git.coop/webarch/containers/images/bullseye:20231016
+#   image: registry.git.coop/webarch/containers/images/bullseye:20231213
 #   stage: bullseye
 #   script:
 #     - molecule test
 jammy:
-  image: registry.git.coop/webarch/containers/images/jammy:20231016
+  image: registry.git.coop/webarch/containers/images/jammy:20231213
   stage: jammy
   script:
     - molecule test
 trixie:
-  image: registry.git.coop/webarch/containers/images/trixie:20231016
+  image: registry.git.coop/webarch/containers/images/trixie:20231213
   stage: trixie
   script:
     - molecule test
