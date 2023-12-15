@@ -55,13 +55,13 @@
         - ansible_effective_user_id != 0
 
     - name: Getent passwd
-      getent:
+      ansible.builtin.getent:
         database: passwd
         key: "{{ ansible_user_id }}"
         split: ':'
 
     - name: "Set a fact for the HOME directory for {{ ansible_user_id }}"
-      set_fact:
+      ansible.builtin.set_fact:
         jc_home: "{{ ansible_facts | community.general.json_query(jc_jmespath_query) }}"
       vars:
         jc_jmespath_query: "getent_passwd.{{ ansible_user_id }}[4]"
