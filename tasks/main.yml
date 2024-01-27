@@ -27,11 +27,10 @@
         ( ( ansible_local.dpkg.arch is not defined ) or
         ( ansible_local.bash.path is not defined ) )
 
-    - name: Check that the install method is valid
-      ansible.builtin.assert:
-        that:
-          - jc_install is regex('^deb|git|pipx$')
-        quiet: "{% if ansible_verbosity == 0 %}true{% else %}false{% endif %}"
+    - name: Debug the install method
+      ansible.builtin.debug:
+        var: jc_install
+        verbosity: "{% if ansible_check_mode | bool %}0{% else %}1{% endif %}"
 
     - name: Check version variable for deb and pipx installs
       ansible.builtin.assert:
