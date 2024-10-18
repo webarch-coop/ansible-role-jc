@@ -25,7 +25,7 @@ argument_specs:
       jc_home:
         type: str
         required: true
-        description: Generated variable for the HOME directory of the user that JC is to be installed for.
+        description: Generated variable for the HOME directory of the Ansible user that JC is to be present for.
       jc_install:
         type: str
         required: true
