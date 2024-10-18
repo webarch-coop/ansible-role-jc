@@ -29,7 +29,7 @@ The main entry point for the JC role.
 | jc_jmespath_queries | JMESPath queries. | dict | yes |
 | jc_pipx_root_env | The pipx environment variables for the root user. | dict of 'jc_pipx_root_env' options | no |
 | jc_pipx_user_env | The pipx environment variables for a regular user. | dict of 'jc_pipx_user_env' options | no |
-| jc_verify | Verify variables that start with jc_ using the argument specification. | bool | yes |
+| jc_verify | Verify variables that start with jc underscore using the argument specification. | bool | yes |
 | jc_version | JC version number, branch name or latest. | str | yes |
 
 #### Options for main > jc_pipx_root_env

@@ -67,7 +67,7 @@ argument_specs:
       jc_verify:
         type: bool
         required: true
-        description: Verify variables that start with jc_ using the argument specification.
+        description: Verify variables that start with jc underscore using the argument specification.
       jc_version:
         type: str
         required: true
