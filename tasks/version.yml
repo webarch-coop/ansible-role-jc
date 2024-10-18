@@ -27,7 +27,7 @@
 
     - name: Check if jc is installed using pipx
       ansible.builtin.command: pipx list --json
-      environment: "{% if ansible_effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
+      environment: "{% if ansible_facts.effective_user_id == 0 %}{{ jc_pipx_root_env | default('') }}{% else %}{{ jc_pipx_user_env | default('') }}{% endif %}"
       check_mode: false
       changed_when: false
       register: jc_pipx_list_json

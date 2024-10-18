@@ -18,14 +18,20 @@
 - name: Install or upgrade jc
   block:
 
+    - name: Include verify variables tasks
+      ansible.builtin.include_tasks: verify.yml
+      when:
+        - jc_verify | bool
+        - ansible_version.full is version('2.11', '>=')
+
     - name: Include apt role local fact tasks
       ansible.builtin.include_role:
         name: apt
         tasks_from: local_facts.yml
       when: >-
-        ( ansible_effective_user_id == 0 ) and
-        ( ( ansible_local.dpkg.arch is not defined ) or
-        ( ansible_local.bash.path is not defined ) )
+        ( ansible_facts.effective_user_id == 0 ) and
+        ( ( ansible_facts.ansible_local.dpkg.arch is not defined ) or
+        ( ansible_facts.ansible_local.bash.path is not defined ) )
 
     - name: Debug the install method
       ansible.builtin.debug:
@@ -51,19 +57,19 @@
         msg: "This role can be run without become / as a non-root user for git and pipx installs but not for deb installs"
       when:
         - jc_install == "deb"
-        - ansible_effective_user_id != 0
+        - ansible_facts.effective_user_id != 0
 
     - name: Getent passwd
       ansible.builtin.getent:
         database: passwd
-        key: "{{ ansible_user_id }}"
+        key: "{{ ansible_facts.user_id }}"
         split: ':'
 
-    - name: "Set a fact for the HOME directory for {{ ansible_user_id }}"
-      ansible.builtin.set_fact:
-        jc_home: "{{ ansible_facts | community.general.json_query(jc_jmespath_query) }}"
-      vars:
-        jc_jmespath_query: "getent_passwd.{{ ansible_user_id }}[4]"
+    # - name: "Set a fact for the HOME directory for {{ ansible_user_id }}"
+    #   ansible.builtin.set_fact:
+    #     jc_home: "{{ ansible_facts | community.general.json_query(jc_jmespath_query) }}"
+    #   vars:
+    #     jc_jmespath_query: "getent_passwd.{{ ansible_facts.user_id }}[4]"
 
     - name: Root apt tasks
       block:
@@ -88,7 +94,7 @@
                   - "apt-cache policy pipx stderr {{ jc_apt_cache_policy_pipx.stderr }}"
                 quiet: "{% if ansible_verbosity == 0 %}true{% else %}false{% endif %}"
 
-          when: ansible_distribution_release == "bullseye"
+          when: ansible_facts.distribution_release == "bullseye"
 
         - name: Packages jq and pipx present
           ansible.builtin.apt:
@@ -98,12 +104,12 @@
             state: present
             update_cache: true
 
-      when: ansible_effective_user_id == 0
+      when: ansible_facts.effective_user_id == 0
 
     - name: Check pipx is present for git and pipx installs
       ansible.builtin.shell: type -p pipx
       args:
-        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
+        executable: "{{ ansible_facts.ansible_local.bash.path | default('/bin/bash') }}"
       check_mode: false
       changed_when: false
       when: jc_install is regex('^git|pipx$')
@@ -111,7 +117,7 @@
     - name: Check jc is present
       ansible.builtin.shell: type -p jc
       args:
-        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
+        executable: "{{ ansible_facts.ansible_local.bash.path | default('/bin/bash') }}"
       check_mode: false
       changed_when: false
       register: jc_type_path
@@ -162,7 +168,7 @@
       when:
         - jc_install == "deb"
         - ( jc_deb is not defined ) or ( jc_existing is not defined ) or ( ( jc_version == "latest" ) and ( jc_existing is ansible.builtin.version(jc_proposed, 'ne', version_type='semver') ) ) or ( ( jc_version != "latest" ) and ( jc_existing is ansible.builtin.version(jc_version, 'ne') ) )
-        - ansible_effective_user_id == 0
+        - ansible_facts.effective_user_id == 0
 
     - name: Include git install tasks
       ansible.builtin.include_tasks: git.yml
@@ -186,7 +192,7 @@
     - name: Check jc path
       ansible.builtin.shell: type -p jc
       args:
-        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
+        executable: "{{ ansible_facts.ansible_local.bash.path | default('/bin/bash') }}"
       check_mode: false
       changed_when: false
       register: jc_type_path
@@ -214,7 +220,7 @@
             - ( jc_bash is defined ) and ( jc_bash | bool )
             - ( jc_existing is defined ) and ( jc_existing is version('1.20.1', '>=') )
             - ( jc_install != "deb" ) or ( jc_install == "deb" and jc_existing is version('1.20.2', '<') )
-            - ansible_effective_user_id == 0
+            - ansible_facts.effective_user_id == 0
 
         - name: The installed version of jc
           ansible.builtin.debug:

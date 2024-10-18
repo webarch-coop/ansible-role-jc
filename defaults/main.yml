@@ -17,5 +17,6 @@ jc_pipx_root_env:
 jc_pipx_user_env:
   PIPX_HOME: "{{ ansible_env.HOME | default(jc_home) }}/.local/pipx"
   PIPX_BIN_DIR: "{{ ansible_env.HOME | default(jc_home) }}/.local/bin"
+jc_verify: true
 jc_version: latest
 ...

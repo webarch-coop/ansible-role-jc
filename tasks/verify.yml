@@ -8,22 +8,25 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-extends: default
-yaml-files:
-  - '*.yaml'
-  - '*.yml'
-rules:
-  braces:
-    max-spaces-inside: 1
-    level: error
-  brackets:
-    max-spaces-inside: 1
-    level: error
-  line-length: disable
-  comments-indentation: disable
-  comments:
-    min-spaces-from-content: 1
-  octal-values:
-    forbid-implicit-octal: true
-    forbid-explicit-octal: true
+- name: Verify variables
+  block:
+
+    - name: Debug the hostvars variable names that start with jc_
+      ansible.builtin.debug:
+        var: jcvarnames
+        verbosity: "{% if ansible_check_mode | bool %}3{% else %}4{% endif %}"
+
+    - name: Debug the hostvars variable names that start with jc_
+      ansible.builtin.debug:
+        var: jchostvars
+        verbosity: "{% if ansible_check_mode | bool %}3{% else %}4{% endif %}"
+
+    - name: Check jc_ variables using meta/argument_specs.yml
+      ansible.builtin.validate_argument_spec:
+        argument_spec: "{{ (lookup('ansible.builtin.file', 'meta/argument_specs.yml') | from_yaml)['argument_specs']['main']['options'] }}"
+        provided_arguments: "{{ jchostvars }}"
+
+  when: jc_verify | bool
+  tags:
+    - jc
 ...

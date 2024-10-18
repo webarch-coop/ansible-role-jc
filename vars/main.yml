@@ -8,22 +8,10 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
-extends: default
-yaml-files:
-  - '*.yaml'
-  - '*.yml'
-rules:
-  braces:
-    max-spaces-inside: 1
-    level: error
-  brackets:
-    max-spaces-inside: 1
-    level: error
-  line-length: disable
-  comments-indentation: disable
-  comments:
-    min-spaces-from-content: 1
-  octal-values:
-    forbid-implicit-octal: true
-    forbid-explicit-octal: true
+jc_jmespath_queries:
+  home: "getent_passwd.{{ ansible_facts.user_id }}[4]"
+jc_home: "{{ ansible_facts | community.general.json_query(jc_jmespath_queries.home) }}"
+# https://docs.ansible.com/ansible/latest/playbook_guide/complex_data_manipulation.html
+jcvarnames: "{{ q('varnames', '^jc_') | sort }}"
+jchostvars: "{{ dict(jcvarnames | list | zip(q('vars', *jcvarnames))) }}"
 ...
