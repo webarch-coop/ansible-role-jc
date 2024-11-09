@@ -17,7 +17,7 @@
         jc -B > /root/jc_bash_completion
       changed_when: false
       args:
-        executable: "{{ ansible_local.bash.path | default('/bin/bash') }}"
+        executable: "{{ ansible_facts.ansible_local.bash.path | default('/bin/bash') }}"
 
     - name: Bash completion directory present
       ansible.builtin.file:
