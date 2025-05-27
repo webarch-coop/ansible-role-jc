@@ -1,4 +1,4 @@
-# Copyright 2022-2024 Chris Croome
+# Copyright 2022-2025 Chris Croome
 #
 # This file is part of the Webarchitects JC Ansible role.
 #
@@ -11,7 +11,7 @@
 repos:
   # https://github.com/adrienverge/yamllint/tags
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         name: YAML Lint
@@ -25,20 +25,20 @@ repos:
           - templates
   # https://github.com/jackdewinter/pymarkdown/releases
   - repo: https://github.com/jackdewinter/pymarkdown.git
-    rev: v0.9.25
+    rev: v0.9.30
     hooks:
       - id: pymarkdown
         name: Markdown Lint
   # https://github.com/ansible/ansible-lint/releases
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v24.9.2
+    rev: v25.5.0
     hooks:
       - id: ansible-lint
         name: Ansible Lint
         language: python
         additional_dependencies:
           # https://github.com/kellyjonbrazil/jc/releases
-          - jc==1.25.3
+          - jc==1.25.5
           # https://github.com/jmespath/jmespath.py/tags
           - jmespath==1.0.1
 ...
