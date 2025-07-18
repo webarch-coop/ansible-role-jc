@@ -17,7 +17,7 @@ repos:
         name: YAML Lint
   # https://github.com/aristanetworks/j2lint/releases
   - repo: https://github.com/aristanetworks/j2lint.git
-    rev: v1.1.0
+    rev: v1.2.0
     hooks:
       - id: j2lint
         name: Jinja2-Linter
