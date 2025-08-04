@@ -24,7 +24,7 @@ argument_specs:
         description: Install Bash completion if the jc version is >= 1.20.1 and not the .deb package, unless the jc version is <= 1.20.1.
       jc_home:
         type: str
-        required: true
+        required: false
         description: Generated variable for the HOME directory of the Ansible user that JC is to be present for.
       jc_install:
         type: str
