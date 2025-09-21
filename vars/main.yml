@@ -8,6 +8,8 @@
 #
 # You should have received a copy of the GNU General Public License along with the Webarchitects JC Ansible role. If not, see <https://www.gnu.org/licenses/>.
 ---
+ansible_managed: Ansible managed
+
 jc_jmespath_queries:
   home: "getent_passwd.{{ ansible_facts.user_id }}[4]"
 jc_home: "{{ ansible_facts | community.general.json_query(jc_jmespath_queries.home) }}"
